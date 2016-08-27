@@ -1,0 +1,62 @@
+<div *ngIf="!bEdit && sValueEdit"
+     (dblclick)="onClickEdit()"
+	 class="edit">
+    <a *ngIf="aLink"
+       [routerLink]="aLink">{{getValue()}}</a>
+    <span *ngIf="!aLink && !bPre">{{getValue()}}</span>
+    <pre *ngIf="!aLink && bPre">{{getValue()}}</pre>
+	<a (click)="onClickEdit()"
+		class="a pull-right">
+		<i class="fa fa-pencil"></i>
+	</a>
+</div>
+<div *ngIf="!bEdit && !sValueEdit">
+	<a (click)="onClickEdit()"
+		class="a">
+		{{s('add', w(sName))}}
+	</a>
+</div>
+<div *ngIf="bEdit"
+	 class="edit">
+	<form (ngSubmit)="onSubmitEdit()">
+		<input *ngIf="sType == 'number'"
+			   [(ngModel)]="sValueEdit"
+               [ngModelOptions]="{standalone: true}"
+			   type="number" class="form-control" [focus]="bEdit" />
+		<input *ngIf="sType == 'date'"
+			   [(ngModel)]="sValueEdit"
+               [ngModelOptions]="{standalone: true}"
+			   type="text" class="form-control" [focus]="bEdit" />
+		<input *ngIf="sType == 'text-short'"
+			   [(ngModel)]="sValueEdit"
+               [ngModelOptions]="{standalone: true}"
+			   type="text" class="form-control" [focus]="bEdit" />
+		<textarea *ngIf="sType == 'text-long'"
+                  [(ngModel)]="sValueEdit"
+                  [ngModelOptions]="{standalone: true}"
+                  class="form-control" [focus]="bEdit">
+		</textarea>
+        <select *ngIf="aValueEditDropdown && aValueEditDropdown.length > 0 && aValueEditDropdown[0].sCategory === null && (sType == 'boolean' || sType == 'foreign' || sType == 'enum')"
+                [ngModel]="sValueEdit"
+                (ngModelChange)="onDropdownUpdate($event)"
+                [ngModelOptions]="{standalone: true}"
+                class="form-control">
+            <option *ngFor="let oDropdownOption of aValueEditDropdown"
+                    value="{{oDropdownOption.nId}}">{{oDropdownOption.sName}}</option>
+        </select>
+        <select *ngIf="aValueEditDropdown && aValueEditDropdown.length > 0 && aValueEditDropdown[0].sCategory !== null && (sType == 'boolean' || sType == 'foreign' || sType == 'enum')"
+                [ngModel]="sValueEdit"
+                (ngModelChange)="onDropdownUpdate($event)"
+                [ngModelOptions]="{standalone: true}"
+                class="form-control">
+            <optgroup *ngFor="let sCategory of getDropdownCategories()"
+                      label="{{sCategory}}">
+                <option *ngFor="let oDropdownOption of getFilteredDropdown(sCategory)"
+                        value="{{oDropdownOption.nId}}">{{oDropdownOption.sName}}</option>
+            </optgroup>
+        </select>
+        <input type="submit" class="btn btn-primary" value="{{w('save')}}" />
+		<button (click)="onClickAbort()"
+                class="btn btn-default">{{w('abort')}}</button>
+	</form>
+</div>

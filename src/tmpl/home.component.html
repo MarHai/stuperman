@@ -1,0 +1,561 @@
+<div (window:scroll)="toggleNavbar($event)"
+     (window:resize)="toggleNavbar($event)"
+     id="top" class="fullscreen-image-background">
+    <!-- NAVBAR -->
+    <div class="navbar navbar-fixed-top"
+         [class.navbar-light]="bNavbarLight">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggler pull-xs-right" type="button" data-toggle="collapse" data-target="#main-nav">
+                    <span class="sr-only">Menü</span>
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a *ngIf="bNavbarLight"
+                   [routerLink]="['/home']" 
+                   class="navbar-brand">
+                    <img src="../img/stuperman_logo.png" alt="Stuperman" />
+                </a>
+            </div>
+            <nav class="navbar-collapse pull-xs-right" id="main-nav" role="navigation">
+                <ul [class.navbar-light]="bNavbarLight"
+                    class="nav navbar-nav nav-text-light">
+                    <li class="nav-item"><a (click)="onClickScroll()"><i class="fa fa-home"></i></a></li>
+                    <li class="nav-item"><a (click)="onClickScroll('about')">DAS BIN ICH</a></li>
+                    <li class="nav-item"><a (click)="onClickScroll('features')">DAS KANN ICH</a></li>
+                    <li class="nav-item"><a (click)="onClickScroll('benefits')">... DAS AUCH</a></li>
+                    <li class="nav-item"><a (click)="onClickScroll('faq')">F.A.Q.</a></li>
+                    <li class="nav-item"><a (click)="onClickScroll('contact')">KONTAKT</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- END NAVBAR -->
+
+    <!-- HERO UNIT -->
+    <div id="hero-unit" class="hero-unit">
+        <div class="hero-content text-right">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-6">
+                        <div id="slidecaption" class="slide-caption">
+                            <div class="hero-text">
+                                <h2 class="hero-heading"><span class="hidden-md-down">ICH BIN'S, </span><span class="name">STUPERMAN</span></h2>
+                            </div>
+                        </div>
+                        <div class="hero-buttons">
+                            <div *ngIf="bLogin">
+                                <form (ngSubmit)="checkLogin()"
+                                      *ngIf="!bLoggingIn">
+                                    <label>
+                                        {{w('sName')}}
+                                        <input [(ngModel)]="sUser"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [focus]="bLogin"
+                                               type="text" class="form-control" placeholder="Benutzername" required />
+                                    </label>
+                                    <label>
+                                        {{w('sPassword')}}
+                                        <input [(ngModel)]="sPassword" 
+                                               [ngModelOptions]="{standalone: true}"
+                                               type="password" class="form-control" placeholder="Passwort" required />
+                                    </label>
+                                    <a (click)="onChangeMode('home')"
+                                       class="btn btn-outline">{{w('abort')}}</a>
+                                    <input type="submit" value="{{w('login')}}" class="btn btn-primary" />
+                                </form>
+                                <h1 *ngIf="bLoggingIn"
+                                    class="text-xs-center"><i class="fa fa-circle-o-notch fa-spin"></i></h1>
+                            </div>
+                            <div *ngIf="!bLogin">
+                                <a (click)="onClickScroll('about')" 
+                                   id="btn-about" class="btn btn-outline btn-lg"><i class="fa fa-arrow-circle-o-down"></i> WER?</a>
+                                <a (click)="onChangeMode('login-form')"
+                                   id="btn-contact" class="btn btn-primary btn-lg">
+                                    <i class="fa fa-sign-in"></i> LOGIN
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END HERO UNIT -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content" class="main-content">
+        <!-- ABOUT -->
+        <div id="about" class="section about">
+            <div class="container">
+                <div class="section-heading">
+                    <h2>DAS BIN ICH</h2>
+                    <p>Ein nichtkommerzielles Notenverwaltungssystem für Lehrende</p>
+                    <hr />
+                </div>
+                <div class="section-content">
+                    <p><em>Stuperman</em>. Der <em>Stu</em>dent <em>Per</em>formance <em>Man</em>ager.</p>
+                    <p>Wer Leistungen anderer bewerten muss, braucht Organisationstalent. Dabei ist es egal, ob man Lehrender im Schuldienst, an der Universität oder in einer anderen Bildungseinrichtung ist  &mdash; Klassen oder Seminare, Schüler oder Studierende, Prüfungen, Noten, Teilleistungen müssen erfasst, verwaltet und jederzeit gerechtfertigt werden.</p>
+                    <p><em>Dabei möchte ich Dir helfen.</em></p>
+                    <div class="row">
+                        <p class="col-md-6">Mit mir verwaltest Du Schüler oder Studierende in Klassen oder Seminaren, legst Prüfungen an, bewertest diese nach flexiblen Schemata, vergibst Noten und &mdash; ganz wichtig &mdash; behältst dabei immer den Überblick. Ich helfe Dir mit zahlreichen Perspektiven, flexiblen Filtern, übersichtlichen Grafiken und nachvollziehbaren Berechnungen.</p>
+                        <p class="col-md-6">Und noch was: Deine Lehre wird sich durch mich sogar vermutlich sogar noch verbessern (sofern das überhaupt noch geht), denn durch mich wird Deine Notengebung noch transparenter. Und das kommt nicht nur Dir, sondern auch Deinen Schülern oder Studierenden zugute. Dafür gibt es auch wissenschaftliche Belege, zum Beispiel bei <a href="http://visible-learning.org/" title="Hattie, John (2009). Visible Learning. New York, NY: Routledge.">Hattie (2008)</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END ABOUT -->
+
+
+
+        <!-- FULL-WIDTH PARALLAX -->
+        <div id="parallax-2" class="section full-width-parallax parallax">
+            <div class="container">
+                <blockquote class="blockquote blockquote-reverse">
+                    <p>Lass mich Deine Verwaltung sein, damit Du Dich auf das konzentrieren kannst, was Du immer wolltest &mdash; lehren.</p>
+                    <footer class="blockquote-footer">Stuperman</footer>
+                </blockquote>
+            </div>
+        </div>
+        <!-- END FULL-WIDTH PARALLAX -->
+
+
+
+        <!-- FEATURES -->
+        <div id="features" class="section features">
+            <div class="container">
+                <div class="section-heading">
+                    <h2>DAS KANN ICH</h2>
+                    <p>
+                        Ich kann viel. Und genau wie Deine Schüler lerne ich auch ständig dazu.<br />
+                        Hier eine Auswahl meiner Fähigkeiten ...
+                    </p>
+                    <hr />
+                </div>
+                <div class="section-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="fa fa-users service-icon"></i>
+                                <div class="service-text">
+                                    <h3>Klassen</h3>
+                                    <p>Verwalte Deine Klassen über viele (Schul-)Jahre und behalte trotzdem den Überblick. Ich kann sogar Sitzpläne für Dich erstellen.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="fa fa-female service-icon"></i>
+                                <div class="service-text">
+                                    <h3>Schüler</h3>
+                                    <p>Einmal eingetragen habe ich Deine Schützlinge im Blick. Und dank individueller Leistungsentwicklung bist Du für jede Sprechstunde gerüstet.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="fa fa-graduation-cap service-icon"></i>
+                                <div class="service-text">
+                                    <h3>Prüfungen und Noten</h3>
+                                    <p>Plane Dein Schuljahr und verwalte einzelne Prüfungen. Am Ende helfe ich Dir beim Berechnen Deiner Noten und zeige Dir alle wichtigen Daten für Deine Klasse.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="fa fa-pencil-square-o service-icon"></i>
+                                <div class="service-text">
+                                    <h3>Korrigieren</h3>
+                                    <p>Ich zeige Dir flexible Bewertungsraster, achte darauf, dass Du niemanden vergisst und kann sogar mit Wiederholern umgehen. Nur korrigieren musst Du weiterhin selbst.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="fa fa-sliders service-icon"></i>
+                                <div class="service-text">
+                                    <h3>Bewertungskriterien</h3>
+                                    <p>Unterschiedliche Prüfungen wollen unterschiedlich bewertet werden. Aber das ist kein Problem, das kann ich im Schlaf.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="fa fa-list-ol service-icon"></i>
+                                <div class="service-text">
+                                    <h3>Überblick</h3>
+                                    <p>Habe ich schon erwähnt, dass ich das alles für Dich im Überblick behalte? Du findest Dich ganz leicht zurecht. Versprochen!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="fa fa-database service-icon"></i>
+                                <div class="service-text">
+                                    <h3>Datenverwaltung</h3>
+                                    <p>Klar, Du willst mir nicht alle Schüler händisch eintragen. Deshalb habe ich mich mit Dem Schülerverwaltungssystem Deiner Schule angefreundet und kann dessen Daten selbstständig einlesen.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="fa fa-calculator service-icon"></i>
+                                <div class="service-text">
+                                    <h3>Notensystem</h3>
+                                    <p>Du unterrichtest mit unterschiedlichen Notensystemen? Kein Problem, ich beherrsche Sie alle und kann auch mit allen rechnen.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END FEATURES -->
+
+
+
+        <!-- FULL-WIDTH PARALLAX -->
+        <div id="parallax-1" class="section full-width-parallax parallax">
+            <div class="container">
+                <blockquote class="blockquote blockquote-reverse">
+                    <p>Weniger Papier, weniger Aufwand, weniger Stress.</p>
+                    <footer class="blockquote-footer">Stuperman</footer>
+                </blockquote>
+            </div>
+        </div>
+        <!-- END FULL-WIDTH PARALLAX -->
+
+
+
+        <!-- BENEFITS -->
+        <div id="benefits" class="section benefits" >
+            <div class="container">
+                <div class="section-heading">
+                    <h2>DAS ZEICHNET MICH AUCH AUS</h2>
+                    <p>Nicht nur äußerst praktisch, sondern auch technisch versiert</p>
+                    <hr />
+                </div>
+                <div class="section-content">
+                    <div class="row">
+                        <div class="col-md-3 text-xs-center">
+                            <i class="fa fa-unlock-alt benefit-icon"></i>
+                            <p>gesicherte Übertragung zu Servern in Deutschland, verschlüsselte Datenspeicherung</p>
+                            <span class="skill-name">sicher</span>
+                        </div>
+                        <div class="col-md-3 text-xs-center">
+                            <i class="fa fa-lightbulb-o benefit-icon"></i>
+                            <p>nachvollziehbare Verwaltung, transparente Notengebung und reproduzierbare Anleitungen</p>
+                            <span class="skill-name">transparent</span>
+                        </div>
+                        <div class="col-md-3 text-xs-center">
+                            <i class="fa fa-chain-broken benefit-icon"></i>
+                            <p>online und offline nutzbar, am Desktop-Rechner, Notebook und Smartphone</p>
+                            <span class="skill-name">zuverlässig</span>
+                        </div>
+                        <div class="col-md-3 text-xs-center">
+                            <i class="fa fa-paper-plane-o benefit-icon"></i>
+                            <p>modernste Technologien ermöglichen schnelles und effizientes Arbeiten</p>
+                            <span class="skill-name">schnell</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END BENEFITS -->
+
+
+
+
+        <!-- FULL-WIDTH PARALLAX -->
+        <div id="parallax-3" class="section full-width-parallax parallax">
+            <div class="container">
+                <blockquote class="blockquote blockquote-reverse">
+                    <p>Jederzeit, jedes Gerät, jeder Ort &mdash; jede Schule, jede Uni, jeder Hort.</p>
+                    <footer class="blockquote-footer">Stuperman</footer>
+                </blockquote>
+            </div>
+        </div>
+        <!-- END FULL-WIDTH PARALLAX -->
+
+
+
+
+
+        <!-- FAQ -->
+        <div id="faq" class="section faq">
+            <div class="container">
+                <div class="section-heading">
+                    <h2>Frequently Asked Questions</h2>
+                    <p>Du hast Fragen? Hier erhältst Du Antworten.</p>
+                    <hr />
+                </div>
+                <div class="section-content">
+                    <div class="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq1">
+                                    01 &middot; Ich habe es noch nicht so ganz verstanden &mdash; was kannst du?
+                                </a></h4>
+                            </div>
+                            <p id="faq1" class="panel-collapse collapse" role="tabpanel">
+                                Ich verwalte Deine Schüler und Studenten für Dich. Ich bin also Dein Register für Schüler und Klassen, ich bin Deine Sammelordner für Schulaufgaben und Prüfungen und ich bin alle Deine Unterlagen in Sprechstunden. Kurzum: Ich erleichtere Dir Dein Lehrer-Dasein.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq2">
+                                    02 &middot; Ich bin aber gar kein Lehrer im klassischen Sinn, sondern ...
+                                </a></h4>
+                            </div>
+                            <p id="faq2" class="panel-collapse collapse" role="tabpanel">
+                                Das macht nichts. Im Endeffekt bin ich nützlich für alle Menschen, die Leistungen anderer irgendwie im Überblick behalten müssen, also auch für Dozenten, Lehrbeauftragte, Trainer, Seminarleiter und dergleichen. Ganz grundsätzlich helfe ich Dir, Gruppen von Personen (z.B. Klassen) zu verwalten, die gewisse Teilleistungen (z.B. Prüfungen) erbringen müssen, um am Ende eine Gesamtleistung (z.B. Note) zu erhalten. Ob das Klassen, Seminare, Gruppen von Weiterzubildenden oder Vereine voller angehender Tischtennisprofis sind, ist mir völlig egal.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq3">
+                                    03 &middot; Können (oder sollen) meine Schüler dich auch nutzen?
+                                </a></h4>
+                            </div>
+                            <p id="faq3" class="panel-collapse collapse" role="tabpanel">
+                                Das ist nicht nötig. Ich kann gerne für Dich E-Mails an alle Deine Schüler oder Studierenden schicken, in denen ich Ihnen etwa Ihre Prüfungsergebnisse oder Noten mitteile, aber mich direkt nutzen müssen sie nicht.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq4">
+                                    04 &middot; Aber du sagst ständig, dass du meine Transparenz erhöhst. Inwiefern? Und: Warum?
+                                </a></h4>
+                            </div>
+                            <p id="faq4" class="panel-collapse collapse" role="tabpanel">
+                                Transparenz ist grundsätzlich etwas sehr gutes, denn Transparenz erhöht die Motivation Der Lernenden. Soll heißen: Wenn ein Schüler oder Student genau weiß, was der Lehrer oder Dozent verlangt, dann motiviert das den Schüler/Student und steigert auch seine Lernleistung. Ich erhöhe Deine Transparenz dadurch, dass ich Dich dazu anhalte, klare Kategorien und Bewertungsschemata anzulegen und Dich dann daran erinnere, diese auch einzuhalten. Deine Schüler oder Studenten wissen dann genau, (a) wie eine Bewertung zustande gekommen ist und (b) was sie beim nächsten Mal anders/besser machen müssen. Und ganz nebenbei erhältst Du so einen guten Eindruck davon, wie objektiv und konsistent Du eigentlich bewertest.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq5">
+                                    05 &middot; Jetzt die Gretchenfrage: Sag', Stuperman, wie hast <em>du</em>'s mit der Transparenz?
+                                </a></h4>
+                            </div>
+                            <p id="faq5" class="panel-collapse collapse" role="tabpanel">
+                                Transparenz ist mir unheimlich wichtig. Deshalb lege ich alle meine Karten offen und lasse Dich gerne unter meinen Umhang schauen. Den kompletten Quellcode von mir findest Du zum Beispiel bei <a href="https://github.com/MarHai/stuperman">GitHub</a> (man könnte mich also auch als Open-Source-Stuperman bezeichnen).
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq6">
+                                    06 &middot; Heißt das, du nimmst auch selbst Hilfe an?
+                                </a></h4>
+                            </div>
+                            <p id="faq6" class="panel-collapse collapse" role="tabpanel">
+                                Aber gerne doch. Wenn Du ordentlich bist und programmieren kannst (insbes. Angular2, also JavaScript, und PHP7), mit Datenbanken zurecht kommst (InnoDB und MyISAM) und die De-facto-Standard-Web-Technologien und -Frameworks kennst (also CSS3 mit SASS, HTML5, Bootstrap), dann freue ich mich auch über Deine Mitarbeit &mdash; sprich: deine Pull-Requests bei <a href="https://github.com/MarHai/stuperman">GitHub</a>.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq7">
+                                    07 &middot; Wer hilft dir denn aktuell? Oder anders formuliert: Wer steht hinter Stuperman?
+                                </a></h4>
+                            </div>
+                            <p id="faq7" class="panel-collapse collapse" role="tabpanel">
+                                Der Mario. Der ist selbst in mehrerlei Hinsicht als Lehrender tätig und hat viel Erfahrung im Umgang mit Schülern, Lehrern und Software. Du findest auch noch Infos über ihn auf seiner eigenen Webseite unter <a href="https://haim.it">haim.it</a>.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq8">
+                                    08 &middot; Wirklich? Eine Einzelperson? Wie glaubhaft ist das denn ...
+                                </a></h4>
+                            </div>
+                            <p id="faq8" class="panel-collapse collapse" role="tabpanel">
+                                Man muss schon seinen Hintergrund und seine Motivation verstehen. Da gibt es zum Einen das <a href="http://computercamp.at">ComputerCamp</a>, das ist ein Ferienlager für Kinder und Jugendliche, bei dem es darum geht, IT-Kenntnisse zu vermitteln. Und im Rahmen dieser Arbeit merkt man schnell, dass es an Schulen nicht immer sehr weit her ist mit den EDV-Kenntnissen und auch mit der technischen Unterstützung, die Lehrer in ihrer täglichen Arbeit so erhalten. Darüber hinaus gibt es die Universität, an der der Mario selbst lehrt und unterrichtet und auch da mangelt es komplett an guten und hilfreichen Werkzeugen, die &mdash; der heutigen Zeit angemessen &mdash; Verwaltung ermöglichen. Zum Anderen ist beim Mario eine Motivation aufgrund seiner besseren Hälfte gegeben, die selbst Lehrerin ist und über dieselben Dinge klagt. Das kann man als engagierter Lehrender, gelernter Informatiker und natürlich als Ehemann nicht einfach so stehen lassen.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq9">
+                                    09 &middot; Mal unter uns, Stuperman, der Mario will dich doch irgendwann zu Geld machen, oder?
+                                </a></h4>
+                            </div>
+                            <p id="faq9" class="panel-collapse collapse" role="tabpanel">
+                                Nein, das will er nicht. Und zwar aus zwei Gründen: Erstens aufgrund seiner Motivation für dieses Projekt (siehe dazu die vorherige Frage zu Marios Hintergrund und seiner Motivation) und zweitens aufgrund seiner Überzeugungen. Die sind nämlich dergestalt, dass Bildung und Wissen einen sehr großen gesellschaftlichen Wert haben, in seinen Augen gar eines der zentralen Fundamente unseres Zusammenlebens sind. Und was die Gesellschaft in ihrem Kern prägt, soll der Gesellschaft nicht durch horrende Preise für suboptimale Qualität zur Last fallen. Das tun aber viele kommerzielle Software-Anbieter gegenüber Schulen und Universitäten in Marios Augen, weshalb ich nicht denke, dass er mich irgendwann zu Geld machen will.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq10">
+                                    10 &middot; Also kostest du auch weiterhin kein Geld, Stuperman?
+                                </a></h4>
+                            </div>
+                            <p id="faq10" class="panel-collapse collapse" role="tabpanel">
+                                Ich bleibe kostenfrei.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq11">
+                                    11 &middot; Kann ich mich trotzdem auf dich verlassen?
+                                </a></h4>
+                            </div>
+                            <p id="faq11" class="panel-collapse collapse" role="tabpanel">
+                                Das hoffe ich doch. Aber nachdem ich einerseits von Mario selbst, andererseits von zahlreichen Freunden in Marios direktem Umfeld genutzt werde, mit denen er es sich ja auch nicht verscherzen will, kannst Du wohl sehr gut auf mich bauen. Aber am Ende musst Du das natürlich selbst entscheiden.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq12">
+                                    12 &middot; Ganz schön viel Engagement, Stuperman. Wie machst du das?
+                                </a></h4>
+                            </div>
+                            <p id="faq12" class="panel-collapse collapse" role="tabpanel">
+                                Nur guten Kaffee trinken, auf Qualität beim Essen achten, gelegentlich Sport treiben, viel frische Luft und, naja, immer mal wieder abschalten. Das steigert Effizienz und Effektivität. Und wenn das nicht hilft, schlafe ich einfach weniger.
+                            </p>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent=".accordion" href="#faq13">
+                                    13 &middot; Kann ich mich nicht doch irgendwie erkenntlich zeigen?
+                                </a></h4>
+                            </div>
+                            <p id="faq13" class="panel-collapse collapse" role="tabpanel">
+                                Ich freue mich über (positive) Zuschriften. Ich freue mich auch über Kaffeelieferungen oder Essenseinladungen, wenn Du gerne (und gut) kochst. Und wenn Du ordentlich bist und programmieren kannst, dann kannst Du dich auch gerne mit Stuperman-Optimierungen oder gar neuen Fähigkeiten am Quellcode erkenntlich zeigen.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END FAQ -->
+
+
+
+
+        <!-- FULL-WIDTH PARALLAX -->
+        <div id="parallax-4" class="section full-width-parallax parallax">
+            <div class="container">
+                <blockquote class="blockquote blockquote-reverse">
+                    <p>Bildung soll frei sein für alle. Und Software sollte das auch.</p>
+                    <footer class="blockquote-footer">Stuperman</footer>
+                </blockquote>
+            </div>
+        </div>
+        <!-- END FULL-WIDTH PARALLAX -->
+
+
+
+
+        <!-- CONTACT -->
+        <div id="contact" class="section contact">
+            <div class="section-heading">
+                <h2>KONTAKT</h2>
+                <p>Du hast Fragen? Immer her damit ...</p>
+                <hr />
+            </div>
+            <div class="section-content">
+                <div class="container">
+                    <p>
+                        Ich bin noch nicht für alle erreichbar. Das liegt daran, dass ich bisland noch nicht genügend Stuperman-Maßanzüge habe und gelegentlich waschen muss. Sobald ich dieses Problem im Griff habe, darf mich frei nutzen, wer Lust hat. Bis dahin helfe ich gerne, soviel ich eben kann. Manche nennen diese Zeit, in der man seine Anzüge gelegentlich noch selbst waschen muss, auch <strong>Beta-Phase</strong>. Wenn Du aber gar nicht warten kannst, dann schreib' mir doch. Vielleicht habe ich gerade Kapazitäten frei.
+                    </p>
+                    <div class="row m-t-3">
+                        <div class="col-md-4">
+                            <div class="contact-info">
+                                <ul class="list-unstyled">
+                                    <li class="row">
+                                        <i class="fa fa-map-marker text-xs-right col-xs-2"></i>
+                                        <h3 class="col-xs-10">Meine Heimat</h3>
+                                        <p class="offset-xs-2 col-xs-10">ist übrigens in Österreich und Deutschland, aber das macht für Deine Notenverwaltung gar nichts.</p>
+                                    </li>
+                                    <li class="row">
+                                        <i class="fa fa-heartbeat text-xs-right col-xs-2"></i>
+                                        <h3 class="col-xs-10">Mein Herz</h3>
+                                        <p class="offset-xs-2 col-xs-10">schlägt am rechten Fleck. Deshalb mache ich den Job hier überhaupt erst.</p>
+                                    </li>
+                                    <li class="row">
+                                        <i class="fa fa-user text-xs-right col-xs-2"></i>
+                                        <h3 class="col-xs-10">Mein Kumpel,</h3>
+                                        <p class="offset-xs-2 col-xs-10">der mir die Outfits näht, heißt übrigens Mario Haim. Also falls der für Dich irgendwie relevant ist.</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="contact-form">
+                                <form (ngSubmit)="onContact()">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div [class.has-danger]="!bValidName"
+                                                 class="form-group">
+                                                <label class="sr-only" for="name">Name:</label>	
+                                                <input [(ngModel)]="sName"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [class.form-control-danger]="!bValidName"
+                                                       type="text" class="form-control" id="name" placeholder="Name" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div [class.has-danger]="!bValidMail"
+                                                 class="form-group">
+                                                <label class="sr-only" for="email">E-Mail-Adresse:</label>
+                                                <input [(ngModel)]="sMail"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [class.form-control-danger]="!bValidMail"
+                                                       type="email" class="form-control" id="email" placeholder="E-Mail-Adresse" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="sr-only" for="subject">Betreff:</label>
+                                        <select [(ngModel)]="sSubject"
+                                                [ngModelOptions]="{standalone: true}"
+                                                class="form-control" id="subject">
+                                            <option value="Frage">Betreff: Eine Frage habe ich noch</option>
+                                            <option value="Beta-Zugang">Betreff: Ich will jetzt schon mitmachen. Bitte, bitte, bitte!</option>
+                                            <option value="Zuneigung">Betreff: Lass mich deine Anzüge waschen. Oder dir anderweitig helfen.</option>
+                                        </select>
+                                    </div>
+                                    <div [class.has-danger]="!bValidMessage"
+                                         class="form-group">
+                                        <label class="sr-only" for="message">Nachricht:</label>
+                                        <textarea [(ngModel)]="sMessage"
+                                                  [ngModelOptions]="{standalone: true}"
+                                                  [class.form-control-danger]="!bValidMessage"
+                                                  id="message" name="message" class="form-control" placeholder="Nachricht"></textarea>
+                                    </div>
+                                    <a (click)="onContact()"
+                                       [class.disabled]="bSending"
+                                       class="btn btn-primary btn-lg">
+                                        <i class="fa fa-paper-plane"></i> <span>Abschicken</span>
+                                    </a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END CONTACT -->
+    </div>
+    <!-- END MAIN CONTENT -->
+
+    <!-- FOOTER -->
+    <footer id="footer" class="section">
+        <div class="container">
+            <p class="copyright">
+                &copy; {{ getCurrentYear() }} &middot; 
+                <a href="https://haim.it/">Mario Haim</a> &middot; 
+                <a (click)="onClickImprint()"
+                   class="a">Impressum</a>
+            </p>
+        </div>
+    </footer>
+    <!-- END FOOTER -->
+
+    <div *ngIf="bBackToTop"
+         class="back-to-top">
+        <a (click)="onClickScroll()"
+           title="ab nach oben"><i class="fa fa-angle-up"></i></a>
+    </div>
+    
+    <grader-imprint [bDoNotShowLink]="true"></grader-imprint>
+</div>

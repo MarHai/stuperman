@@ -1,0 +1,12 @@
+{
+    "require": {
+        "slim/slim": "^3.0",
+        "bairwell/middleware-cors" : "@stable",
+		"phpseclib/phpseclib": "^2.0"
+    },
+    "config": {
+        "platform": {
+            "php": "7.0.2"
+        }
+    }
+}

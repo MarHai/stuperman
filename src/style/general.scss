@@ -1,0 +1,24 @@
+a, .a {
+    cursor: pointer;
+}
+
+.move {
+    cursor: move;
+}
+
+.blockquote-dark {
+    border-color: $gray;
+}
+
+.modal.in {
+    background-image: url('../img/stuperman.svg');
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    background-size: 20%;
+    text-align: initial;
+    color: initial;
+    font-style: normal;
+    text-decoration: none;
+    font-size: initial;
+}
+

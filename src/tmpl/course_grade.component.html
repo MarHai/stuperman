@@ -1,0 +1,63 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-12">
+    <article>
+        <div *ngIf="oCourse">
+            <h2>{{s('coursegradeforx', oCourse.getName())}}</h2>
+            
+            <div [innerHtml]="s('coursegradedesc', w('rating'), w('student')) | markdown"
+                 class="alert alert-info"></div>
+            
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>{{w('sName')}}</th>
+                            <th *ngFor="let oRating of oCourse.aRating">{{oRating.getName()}}</th>
+                            <th>{{w('bGradeManual')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let oStudentInCourse of oCourse.aStudentInCourse; let i = index">
+                            <th>{{oStudentInCourse.oStudent.getName()}}</th>
+                            <td *ngFor="let oRating of oCourse.aRating">
+                                <p>{{oStudentInCourse.stringifyFinalGrade(oRating)}}</p>
+                                <ul *ngIf="oStudentInCourse.numOfTries(oRating.nId) > 1"
+                                    class="fa-ul text-muted">
+                                    <li *ngFor="let oTry of oStudentInCourse.getRatings(oRating.nId)">
+                                        <i class="fa-li fa fa-repeat"></i> 
+                                        {{s('studentratingtryx', oTry.fGrade, oTry.nTry)}}
+                                    </li>
+                                    <li *ngIf="oStudentInCourse.getRatings(oRating.nId).length < oStudentInCourse.numOfTries(oRating.nId)">
+                                        <i class="fa-li fa fa-repeat"></i> 
+                                        {{s('studentratingtryx', w('coursegradenotyet'), oStudentInCourse.numOfTries(oRating.nId))}}
+                                    </li>
+                                </ul>
+                            </td>
+                            <td width="25%">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input [ngModel]="oStudentInCourse.bGradeManual"
+                                               (ngModelChange)="onChangeManual(oStudentInCourse, $event)"
+                                               [class.disabled]="isVolatileGrade(oStudentInCourse.nId)"
+                                               type="checkbox"
+                                               title="{{w('bGradeManual')}}" />
+                                    </span>
+                                    <input [ngModel]="oStudentInCourse.fGrade"
+                                           (ngModelChange)="onChangeGrade(oStudentInCourse, $event)"
+                                           [focus]="nFocus == oStudentInCourse.nId"
+                                           [class.disabled]="isVolatileGrade(oStudentInCourse.nId)"
+                                           type="number"
+                                           title="{{w('fGrade')}}"
+                                           class="form-control" />
+                                </div>   
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <a [routerLink]="['/app', 'course', oCourse.nId ]"
+               class="btn btn-link a">{{s('backto', oCourse.getName())}}</a>
+        </div>
+    </article>
+</div>

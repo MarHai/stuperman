@@ -1,0 +1,29 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-12">
+    <article>
+        <h2>{{w('help')}}</h2>
+        <div class="row">
+            <blockquote class="col-xs-7 text-xs-right blockquote blockquote-reverse m-t-3">
+                {{w('dontworry')}}
+            </blockquote>
+            <img src="../img/stuperman.svg" class="offset-xs-1 col-xs-4 pull-xs-right" alt="Stuperman" />
+        </div>
+        <div *ngIf="aHelp"
+             id="help" role="tablist" aria-multiselectable="true">
+            <div *ngFor="let oHelp of aHelp; let i = index"
+                 class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="#help-{{i}}-content" class="collapsed" data-toggle="collapse" data-parent="#help">
+                            {{i >= 9 ? (i+1) : ('0' + (i+1).toString())}} &middot; <span [innerHtml]="oHelp.sQ | markdown"></span>
+                        </a>
+                    </h4>
+                </div>
+                <div id="help-{{i}}-content" class="panel-collapse collapse" role="tabpanel">
+                    <blockquote [innerHtml]="oHelp.sA | markdown"
+                                class="blockquote"></blockquote>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>

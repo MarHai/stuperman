@@ -1,0 +1,129 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-12">
+    <article>
+        <div *ngIf="oRating">
+            <h2 *ngIf="nTry > 1">
+                {{s('ratingcalculatetryx', nTry)}}
+            </h2>
+            <h2 *ngIf="nTry <= 1">
+                {{w('ratingcalculate')}}
+            </h2>
+            
+            <div *ngIf="eStep == 1">
+                <div class="row">
+                    <grader-chart [sType]="'histogram'"
+                                  [aData]="aHistogramData"
+                                  [aLabel]="oRating.oSystem.aGrade"
+                                  [aSeries]="[ w('grade') ]"
+                                  class="col-xs-12"
+                                  *ngIf="aHistogramData.length > 0"></grader-chart>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3>{{w('ratingcalculateslider')}}</h3> 
+                        <select [ngModel]="nSlider"
+                                (ngModelChange)="updateSlider($event)"
+                                class="form-control">
+                            <option *ngFor="let i of getSliderOptions()"
+                                    value="{{i}}">{{s('ratingcalculateslidervaluex', i)}}</option>
+                        </select>
+                    </div>
+                    <p class="col-md-4 alert alert-info">
+                        {{s('ratingcalculatepass', nMax, nMin, nPass, 100*nPass/nMax)}}
+                    </p>
+                </div>
+
+
+                <div class="table-responsive">
+                    <table *ngIf="aGradePointRange"
+                           class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th> </th>
+                                <th>{{w('fGrade')}}</th>
+                                <th>{{w('ratingcalculate')}}</th>
+                                <th>{{w('pointspectrum')}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let oGradeRange of aGradePointRange; let i = index"
+                                [class.table-danger]="oGradeRange.bInc && oGradeRange.sError != ''">
+                                <th>{{oGradeRange.nCntSub == 0 ? (oGradeRange.bPass ? w('ratingcalculatepos') : w('ratingcalculateneg')) : ' '}}</th>
+                                <td>{{oGradeRange.nGrade.toString()}}</td>
+                                <td><input [ngModel]="oGradeRange.bInc"
+                                           (ngModelChange)="updateInc(i)"
+                                           type="checkbox" class="form-control" /></td>
+                                <td *ngIf="!oGradeRange.bInc"> </td>
+                                <td *ngIf="oGradeRange.bInc">
+                                    <div class="row">
+                                        <div class="col-xs-5">
+                                            <input value="{{i == 0 || oGradeRange.nUpper < 0 ? nMax : aGradePointRange[oGradeRange.nUpper].nFrom - 1}}" class="form-control" disabled />
+                                        </div>
+                                        <span class="col-xs-1 text-xs-center">&ndash;</span>
+                                        <div class="col-xs-5">
+                                            <input [ngModel]="oGradeRange.nFrom"
+                                                   (ngModelChange)="updateFrom(i, $event)"
+                                                   max="{{i == 0 || oGradeRange.nUpper < 0 ? nMax : aGradePointRange[oGradeRange.nUpper].nFrom - 1}}"
+                                                   type="number" class="form-control" min="1" step="1" />
+                                        </div>
+                                    </div>
+                                    <p *ngIf="oGradeRange.sError != ''"
+                                       class="text-danger">{{oGradeRange.sError}}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <p *ngIf="sErrorGeneral != ''"
+                   class="alert alert-danger">{{sErrorGeneral}}</p>
+                <div class="clearfix">
+                    <a (click)="onClickCalculate()"
+                       [class.disabled]="bError"
+                       class="pull-md-right a btn btn-primary">{{w('ratingcalculateaction1')}}</a>
+                    <a [routerLink]="['/app', 'course', oRating.nCouId, 'rating', oRating.nId ]"
+                       class="a btn btn-link">{{w('back')}}</a>
+                </div>
+            </div>
+            
+            
+            <div *ngIf="eStep > 1">
+                <p>{{s('ratingcalculatevalidate', nStudentsToCalculate, w('student', nStudentsToCalculate), (oRating.getRatingsFromFinalTry().length - nStudentsToCalculate), w('student', (oRating.getRatingsFromFinalTry().length - nStudentsToCalculate)), oRating.getName(), w('xtry', nTry))}}</p>
+                <fieldset [disabled]="eStep > 2">
+                    <div class="checkbox">
+                        <label>
+                            <input [(ngModel)]="bOverwrite"
+                                   type="checkbox" />
+                            {{s('ratingcalculateoverwrite', w('student', 2))}}
+                        </label>
+                    </div>
+                </fieldset>
+                <ol *ngIf="eStep >= 3 && aLog.length > 0">
+                    <li *ngFor="let oLog of aLog">
+                        {{oLog.oRatingPerStudentInCourse.oStudentInCourse.oStudent.getName()}}: 
+                        <strong *ngIf="!oLog.sError">{{oLog.oRatingPerStudentInCourse.fGrade}}</strong> 
+                        <strong *ngIf="oLog.sError"
+                                class="text-error">{{oLog.sError}}</strong> 
+                        ({{oLog.oRatingPerStudentInCourse.getSumOfPoints()}} /{{nMax}} {{w('fPoints', oLog.oRatingPerStudentInCourse.getSumOfPoints())}})
+                    </li>
+                </ol>
+                
+                <div *ngIf="eStep == 2"
+                     class="clearfix">
+                    <a (click)="onClickCalculate(true)"
+                       [class.disabled]="eStep == 9"
+                       class="pull-md-right a btn btn-primary">{{w('ratingcalculateaction2')}}</a>
+                    <a (click)="onClickBack()"
+                       class="a btn btn-link">{{w('back')}}</a>
+                </div>
+                <div *ngIf="eStep == 9"
+                     class="clearfix">
+                    <a (click)="onClickBack(true)"
+                       class="pull-md-right a btn btn-primary">{{s('backto', oRating.getName())}}</a>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>

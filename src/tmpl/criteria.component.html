@@ -1,0 +1,66 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-12">
+    <article>
+        <div *ngIf="oCriteriaInCatalogue">
+            <h2>
+				<grader-edit [sName]="'sName'"
+							 [(oItem)]="oCriteriaInCatalogue.oCriteria"
+							 [bRequired]="true"></grader-edit>
+            </h2>
+			<p>
+                <grader-edit [sName]="'sNote'"
+							 [(oItem)]="oCriteriaInCatalogue.oCriteria"></grader-edit>
+            </p>
+            <dl>
+                <dt>{{w('nMin')}}</dt>
+                <dd>
+                    <grader-edit [sName]="'nMin'"
+                                 [(oItem)]="oCriteriaInCatalogue.oCriteria"></grader-edit>
+                </dd>
+                <dt>{{w('nMax')}}</dt>
+                <dd>
+                    <grader-edit [sName]="'nMax'"
+                                 [(oItem)]="oCriteriaInCatalogue.oCriteria"></grader-edit>
+                </dd>
+                <dt>{{w('bOptional')}}</dt>
+                <dd>
+                    <grader-edit [sName]="'bOptional'"
+                                 [(oItem)]="oCriteriaInCatalogue.oCriteria"></grader-edit>
+                </dd>
+            </dl>
+            
+            <h3>{{s('cat2criinuse', w('criteria'), w('catalogue', 2))}}</h3>
+			<div id="cat2cri" role="tablist" aria-multiselectable="true">
+				<div *ngFor="let oSingleCriteriaInCatalogue of oCriteriaInCatalogue.oCriteria.aCriteriaInCatalogue"
+					 class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a href="#cat2cri-{{oSingleCriteriaInCatalogue.nId}}-content" data-toggle="collapse" data-parent="#cat2cri" class="collapsed">
+								{{oSingleCriteriaInCatalogue.oCatalogue.getName()}}
+							</a>
+						</h4>
+					</div>
+					<div id="cat2cri-{{oSingleCriteriaInCatalogue.nId}}-content" class="panel-collapse collapse" role="tabpanel">
+                        <dl>
+                            <dt>{{w('catalogue')}}</dt>
+                            <dd>
+                                <a [routerLink]="['/app', 'catalogue', oSingleCriteriaInCatalogue.nCatId ]">
+                                    {{oSingleCriteriaInCatalogue.oCatalogue.getName()}}
+                                </a> 
+                            </dd>
+                            <dt>{{w('nMin')}}</dt>
+                            <dd>{{oSingleCriteriaInCatalogue.getMinPoints()}}</dd>
+                            <dt>{{w('nMax')}}</dt>
+                            <dd>{{oSingleCriteriaInCatalogue.getMaxPoints()}}</dd>
+                            <dt>{{w('gradepoints')}}</dt>
+                            <dd>{{oSingleCriteriaInCatalogue.getMeanPoints()}}</dd>
+                        </dl>
+						<grader-delete [oItem]="oSingleCriteriaInCatalogue"></grader-delete>
+					</div>
+				</div>
+			</div>
+            
+            <grader-delete [(oItem)]="oCriteriaInCatalogue.oCriteria"></grader-delete>
+        </div>
+    </article>
+</div>

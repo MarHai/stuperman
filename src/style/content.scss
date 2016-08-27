@@ -1,0 +1,144 @@
+.edit {
+	&:hover {
+		.a {
+			color: darken($colorbg, $step_size);
+		}
+	}
+	
+	.a {
+		color: $colorbg;
+		
+		&:hover {
+			color: darken($colorbg, 2*$step_size);
+		}
+	}
+}
+
+
+h3 {
+    margin-top: 2rem;
+}
+
+
+div[role="tablist"] {
+    margin: .5rem 0;
+
+    .panel {
+        border-top: .1rem solid $gray;
+        padding: .6rem .4rem;
+        margin: 0;
+
+        .panel-heading {
+            .panel-title {
+                a, .a {
+                    display: block;
+                    text-decoration: none;
+                    position: relative;
+                
+                    &:after {
+                        font-family: FontAwesome;
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                    }
+                    
+                    &:not(.collapsed):after {
+                        content: "\f077";
+                    }
+                    
+                    &.collapsed:after {
+                        content: "\f078";
+                    }
+                    
+                    p, div {
+                        display: inline;
+                    }
+                }
+            }
+        }
+    }
+    
+    .panel:last-child {
+        border-bottom: .1rem solid $gray;
+    }
+}
+
+
+.gu-transit {
+    background-color: $gray;
+    color: transparentize($gray, .5);
+}
+
+
+
+.seatmap {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .26);
+    margin: .4rem;
+    
+    td {
+        width: 25px;
+        height: 25px;
+        border: 1px solid $gray;
+        padding: 0 3px;
+        
+        img {
+            width: 3rem;
+            max-width: none;
+            margin: .1rem;
+        }
+    }
+    
+    td.a {
+        &:hover {
+            background-color: $gray;
+        }
+    }
+    
+    td.a.occupied {
+        background-color: rgba(255, 255, 255, .5);
+        
+        &:hover {
+            background-color: $danger;
+        }
+    }
+}
+
+grader-img {
+    & > a > i, & > .a > i {
+        font-size: 5rem;
+        color: $gray;
+        text-align: center;
+        display: block;
+    }
+    
+    & > a:hover, & > .a:hover {
+        text-decoration: none;
+    }
+    
+    & > a:hover > img, & > .a:hover > img, & > a:hover > i, & > .a:hover > i {
+        opacity: .5;
+    }
+    
+    & > a:hover::after, & > .a:hover::after {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        text-align: center;
+        font-family: FontAwesome;
+        font-size: 3rem;
+        content: "\f040";
+        color: $color2;
+    }
+    
+    .imgfind {
+        padding: 1rem;
+        margin: 1rem;
+        border: .5rem dashed $gray;
+        
+        &.dragover {
+            border-color: $color2;
+            background-color: transparentize($color2, .5);
+        }
+    }
+}

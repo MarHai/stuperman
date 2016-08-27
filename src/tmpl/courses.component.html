@@ -1,0 +1,57 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-9">
+    <article *ngIf="aCourse.length == 0">
+        <div class="row">
+            <blockquote class="col-xs-7 text-xs-right blockquote blockquote-reverse m-t-3">
+                <p>{{s('courseemptystart', oDataService.getCurrentUser().getName())}}</p>
+                <grader-add [oItem]="getEmptyCourse()"
+                            [sValue]="s('add', w('course'))"
+                            (onAdd)="updateLists()"></grader-add>
+            </blockquote>
+            <img src="../img/stuperman.svg" class="offset-xs-1 col-xs-4 pull-xs-right" alt="Stuperman" />
+        </div>
+    </article>
+    <article *ngIf="aCourse.length > 0">
+        <h2>{{w('course', getCategories().length)}}</h2>
+        <div *ngFor="let sCategory of getCategories()">
+            <div *ngIf="isCategoryVisible(sCategory)">
+                <h3>{{sCategory}}</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>{{w('sName')}}</th>
+                                <th>{{s('cntx', w('student', 2))}}</th>
+                                <th>{{w('gradeavg')}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let oCourse of filterCoursesOnCategory(sCategory)" 
+                                (click)="onClickCourse(oCourse)"
+                                class="a">
+                                <th>{{oCourse.getName()}}</th>
+                                <td>{{oCourse.aStudentInCourse.length}}</td>
+                                <td>{{oCourse.getMeanGrade()}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <grader-add [oItem]="getEmptyCourse(sCategory)"
+                            [aHidden]="[ 'sCategory' ]"
+                            [sTitle]="s('addto', w('course'), sCategory)"
+                            (onAdd)="updateLists()"></grader-add>
+            </div>
+        </div>
+        <grader-add [oItem]="getEmptyCourse()"
+                    [sValue]="s('add', w('course'))"
+                    (onAdd)="updateLists()"></grader-add>
+    </article>
+</div>
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-3">
+    <aside>
+        <h6>{{w('quicklink')}}</h6>
+        <grader-quicklink [aLink]="getCategories()"
+                          (onSelect)="onQuicklinkChange($event)"></grader-quicklink>
+    </aside>
+</div>

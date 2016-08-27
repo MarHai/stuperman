@@ -1,0 +1,174 @@
+@import "main";
+
+html {
+    width: 100%;
+    height: 100%;
+    
+    body {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+body {
+	background-color: $colorbg;
+	font-family: $font;
+	
+	@import "general";
+
+	header {
+		padding: 3rem 4rem 0 4rem;
+		margin-bottom: 0;
+		background-color: $color1;
+		
+		nav {
+			margin-top: 1rem;
+
+			.nav-link {
+				padding: .6rem;
+				box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .26);
+				background-color: rgba(255, 255, 255, .5);
+				border-top-left-radius: .3rem;
+				border-top-right-radius: .3rem;
+
+				&:not(.active):hover {
+					background-color: rgba(255, 255, 255, .75);
+				}
+
+				&.active {
+					background-color: #FFF;
+				}
+			}
+		}
+		
+		aside {
+			grader-search {
+				width: 60%;
+				float: left;
+
+				& > .dropdown-menu {
+					display: block;
+				}
+			}
+			
+			& > a.btn {
+			}
+		}
+	}
+    
+    header.students {
+        background-color: $color2;
+    }
+    
+    header.catalogues {
+        background-color: $color3;
+    }
+
+	section {
+		background: $color1;
+		background: linear-gradient($color1, $color1, 20rem, $colorbg 20rem);
+		padding-top: 0;
+		margin-top: 0;
+
+		article {
+			background-color: #FFF;
+			padding: 2rem 3rem;
+			box-sizing: border-box;
+			box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
+			min-height: 25rem;
+            
+            .btn-success, .btn-danger {
+                color: white;
+            }
+			
+			@import "content";
+		}
+
+		aside {
+			padding-top: 2rem;
+			
+			h6 {
+				color: darken($color1, $step_size);
+			}
+
+			ul.nav.nav-pills .nav-link {
+				padding-top: 0;
+				padding-bottom: 0;
+				border-radius: 0;
+				border-left: 2px solid transparent;
+
+				&:not(.active ):hover {
+					border-left-color: darken($color1, $step_size);
+				}
+
+				&.active {
+					color: inherit;
+					background-color: inherit;
+					border-left: 4px solid darken($color1, $step_size);
+					color: darken($color1, $step_size);
+				}
+			}
+		}
+	}
+    
+    section.students {
+		background: $color2;
+		background: linear-gradient($color2, $color2, 20rem, $colorbg 20rem);
+        
+        aside {
+            h6 {
+				color: darken($color2, $step_size);
+            }
+            
+			ul.nav.nav-pills .nav-link {
+				&:not(.active ):hover {
+					border-left-color: darken($color2, $step_size);
+				}
+
+				&.active {
+					border-left: 4px solid darken($color2, $step_size);
+					color: darken($color2, $step_size);
+				}
+            }
+        }
+    }
+    
+    section.catalogues {
+		background: $color3;
+		background: linear-gradient($color3, $color3, 20rem, $colorbg 20rem);
+        
+        aside {
+            h6 {
+				color: darken($color3, $step_size);
+            }
+            
+			ul.nav.nav-pills .nav-link {
+				&:not(.active ):hover {
+					border-left-color: darken($color3, $step_size);
+				}
+
+				&.active {
+					border-left: 4px solid darken($color3, $step_size);
+					color: darken($color3, $step_size);
+				}
+            }
+        }
+    }
+
+	footer {
+		margin: 2rem 0;
+		color: darken($colorbg, $step_size);
+
+		a, .a {
+			color: inherit;
+			padding-bottom: 2px;
+			border-bottom-width: 1px;
+			border-bottom-style: solid;
+		}
+
+		a:hover, .a:hover, a:focus, .a:focus {
+			color: darken($colorbg, 2*$step_size);
+			text-decoration: none;
+		}
+	}
+}

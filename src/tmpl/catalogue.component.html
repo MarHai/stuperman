@@ -1,0 +1,142 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-9">
+    <article>
+        <div *ngIf="oCatalogue">
+            <h2>
+				<grader-edit [sName]="'sName'"
+							 [(oItem)]="oCatalogue"
+							 [bRequired]="true"></grader-edit>
+            </h2>
+			<p>
+                <grader-edit [sName]="'sNote'"
+							 [(oItem)]="oCatalogue"></grader-edit>
+            </p>
+			
+			<h3>{{w('criteria', oCatalogue.aCriteriaInCatalogue.length)}}</h3>
+			<div class="table-responsive">
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+                            <th>&nbsp;</th>
+							<th>{{w('sName')}}</th>
+							<th>{{w('sNote')}}</th>
+							<th>{{w('pointspectrum')}}</th>
+						</tr>
+					</thead>
+					<tbody [sort]="oCatalogue.aCriteriaInCatalogue">
+						<tr *ngFor="let oCriteriaInCatalogue of oCatalogue.aCriteriaInCatalogue"
+                            id="cat2cri:{{oCriteriaInCatalogue.nId.toString()}}">
+                            <td><i class="fa fa-arrows-v move"></i></td>
+							<th (click)="onCriteriaInCatalogueClick(oCriteriaInCatalogue)"
+                                class="a">{{oCriteriaInCatalogue.oCriteria.getName()}}</th>
+							<td (click)="onCriteriaInCatalogueClick(oCriteriaInCatalogue)"
+                                class="a">{{oCriteriaInCatalogue.oCriteria.sNote}}</td>
+							<td (click)="onCriteriaInCatalogueClick(oCriteriaInCatalogue)"
+                                class="a">
+								{{oCriteriaInCatalogue.oCriteria.nMin}} - 
+								{{oCriteriaInCatalogue.oCriteria.nMax}} 
+                                <span *ngIf="oCriteriaInCatalogue.oCriteria.bOptional">
+                                    , <abbr title="{{w('optional')}}">0</abbr>
+                                </span>
+								<i *ngIf="!oCriteriaInCatalogue.oCriteria.bOptional"
+								   class="fa fa-exclamation-circle"
+								   title="{{w('obligatory')}}"></i>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+                            <th>&nbsp;</th>
+							<th colspan="2">{{w('pointspectrum')}}</th>
+                            <th>
+								{{oCatalogue.getMinPoints()}} - 
+								{{oCatalogue.getMaxPoints()}}
+							</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+            
+            <p class="clearfix">
+                <a (click)="onClickAdd(oModalAdd)"
+                   class="a btn btn-success pull-md-right">{{s('addto', w('criteria'), oCatalogue.getName())}}</a>
+            </p>
+            <grader-add [sValue]="'createnew'"
+                        [oItem]="getEmptyCriteria()"
+                        (onAdd)="onCriteriaAdd($event)"
+                        [sClass]="'hidden-xs-up'"
+                        [bDisplayNow]="bDisplayCreate"></grader-add>
+            
+            <grader-delete [(oItem)]="oCatalogue"></grader-delete>
+            
+            <div #oModalAdd
+                 class="modal" role="dialog" data-keyboard="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form (ngSubmit)="onClickSubmit(oModal)">
+                            <div class="modal-header">
+                                <h4 class="modal-title">
+                                    {{s('add', w('criteria'))}}
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <p *ngIf="!bFind"
+                                   class="row">
+                                    <a (click)="onClickFind()"
+                                       class="a col-xs-5 btn btn-link"
+                                       title="{{w('cat2criaddexistent')}}">
+                                        <h1 class="display-3">
+                                            <i class="fa fa-search"></i>
+                                        </h1>
+                                    </a>
+                                    <span class="col-xs-2 p-t-2">{{w('or')}}</span>
+                                    <a (click)="onClickAdd(oModalAdd, true)"
+                                       title="{{w('cat2criaddnew')}}"
+                                       class="a col-xs-5 btn btn-link">
+                                        <h1 class="display-3">
+                                            <i class="fa fa-plus"></i>
+                                        </h1>
+                                    </a>
+                                </p>
+                                
+                                <fieldset *ngIf="bFind"
+                                          class="form-group row">
+                                    <label class="col-sm-3 form-control-label">{{w('criteria')}}</label>
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="sFind"
+                                               [ngModelOptions]="{standalone: true}"
+                                               (keyup)="onSearch($event, oModalAdd)"
+                                               [focus]="true"
+                                               type="text" class="form-control" placeholder="{{w('search')}}" />
+                                    </div>
+                                </fieldset>
+                                <p *ngIf="bFind && sFind != '' && aResult.length == 0"
+                                    class="text-muted">{{w('searchnoresults')}}</p>
+                                <ul *ngIf="bFind && sFind != '' && aResult.length > 0"
+                                    class="nav nav-pills nav-stacked">
+                                    <li *ngFor="let oCriteria of aResult"
+                                        class="nav-item">
+                                        <a (click)="onClickCriteria(oCriteria, oModalAdd)"
+                                           [class.active]="nActiveIndex >= 0 && aResult[nActiveIndex] && aResult[nActiveIndex].nId == oCriteria.nId"
+                                           class="a nav-link">
+                                            {{oCriteria.getName()}} 
+                                            <small class="text-muted">{{oCriteria.nMin}}-{{oCriteria.nMax}} {{w('fPoints', 2)}}, {{oCriteria.bOptional ? w('optional') : w('obligatory')}}</small>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-3">
+    <aside>
+        <h6>{{w('quicklink')}}</h6>
+        <grader-quicklink [aLink]="getCourses()"
+                          (onSelect)="onQuicklinkChange($event)"></grader-quicklink>
+    </aside>
+</div>

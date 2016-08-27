@@ -1,0 +1,86 @@
+<div #oModal
+     class="modal" role="dialog" data-keyboard="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form (ngSubmit)="onClickSubmit(oModal)">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        {{s('add', w(oItem.getTableName()))}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset *ngFor="let oField of aField; let i = index"
+                              class="form-group row">
+                        <label *ngIf="oField.sType == 'foreign'"
+                               class="col-sm-3 form-control-label" attr.for="grader-add-{{i}}">{{w(oDataService.getTableNameFromForeign(oField.sName))}}</label>
+                        <label *ngIf="oField.sType != 'foreign'"
+                               class="col-sm-3 form-control-label" attr.for="grader-add-{{i}}">{{w(oField.sName)}}</label>
+                        <div class="col-sm-9">
+                            <input *ngIf="oField.sType == 'number'"
+                                   [(ngModel)]="oField.mValue"
+                                   [ngModelOptions]="{standalone: true}"
+                                   [focus]="i == 0"
+                                   type="number" class="form-control" id="grader-add-{{i}}" />
+                            <input *ngIf="oField.sType == 'date'"
+                                   [(ngModel)]="oField.mValue"
+                                   [ngModelOptions]="{standalone: true}"
+                                   [focus]="i == 0"
+                                   type="text" class="form-control" id="grader-add-{{i}}" />
+                            <input *ngIf="oField.sType == 'text-short'"
+                                   [(ngModel)]="oField.mValue"
+                                   [ngModelOptions]="{standalone: true}"
+                                   [focus]="i == 0"
+                                   type="text" class="form-control" id="grader-add-{{i}}" />
+                            <textarea *ngIf="oField.sType == 'text-long'"
+                                      [(ngModel)]="oField.mValue"
+                                      [ngModelOptions]="{standalone: true}"
+                                      [focus]="i == 0"
+                                      rows="5"
+                                      class="form-control" id="grader-add-{{i}}">
+                            </textarea>
+                            <select *ngIf="oField.aDropdownValue.length > 0 && (oField.sType == 'boolean' || oField.sType == 'foreign') && oField.aDropdownValue[0].sCategory === null"
+                                    [ngModel]="oField.mValue"
+                                    (ngModelChange)="onDropdownUpdate(oField, $event)"
+                                    [ngModelOptions]="{standalone: true}"
+                                    class="form-control" id="grader-add-{{i}}">
+                                <option *ngFor="let oDropdownOption of oField.aDropdownValue"
+                                        value="{{oDropdownOption.nId}}">{{oDropdownOption.sName}}</option>
+                            </select>
+                            <select *ngIf="oField.aDropdownValue.length > 0 && (oField.sType == 'boolean' || oField.sType == 'foreign') && oField.aDropdownValue[0].sCategory !== null"
+                                    [ngModel]="oField.mValue"
+                                    (ngModelChange)="onDropdownUpdate(oField, $event)"
+                                    [ngModelOptions]="{standalone: true}"
+                                    class="form-control" id="grader-add-{{i}}">
+                                <optgroup *ngFor="let sCategory of getDropdownCategories(oField.aDropdownValue)"
+                                          label="{{sCategory}}">
+                                    <option *ngFor="let oDropdownOption of getFilteredDropdown(oField.aDropdownValue, sCategory)"
+                                            value="{{oDropdownOption.nId}}">{{oDropdownOption.sName}}</option>
+                                </optgroup>
+                            </select>
+                            <div *ngIf="w('helptext.' + oField.sName) != ''"
+                                 class="text-muted"
+                                 [innerHtml]="w('helptext.' + oField.sName) | markdown"></div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <a (click)="onClickAbort(oModal)"
+                       [class.disabled]="bVolatile"
+                       class="btn btn-default">{{w('abort')}}</a>
+                    <input [disabled]="bVolatile"
+                           type="submit" class="btn btn-primary" value="{{w('save')}}" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<p class="clearfix {{sClass}}">
+    <a (click)="onClickAdd(oModal)"
+       class="a btn btn-success pull-md-right"
+       title="{{sTitle}}">
+        <i *ngIf="!sValue"
+           class="fa fa-plus"></i>
+        <span *ngIf="sValue">{{sValue}}</span>
+    </a>
+</p>

@@ -1,0 +1,29 @@
+/**
+ * Font
+ */
+$font: Raleway, sans-serif;
+
+
+/**
+ * Coloring
+ * * darker/lighter colors in $step_size steps
+ * * main colors from left to right
+ */
+$step_size: 30%;
+$color1: #4dc8d4;
+$color2: #71bd7f;
+$color3: #dbdb4c;
+$colorbg: #EEE;
+$gray: #CCC;
+$danger: #E8444E;
+
+
+/**
+ * Sizes
+ */
+$screen-lg-min: 1200px;
+$screen-md-max: $screen-lg-min - 1;
+$screen-md-min: 992px;
+$screen-sm-max: $screen-md-min - 1;
+$screen-sm-min: 768px;
+$screen-xs-max: $screen-sm-min - 1;

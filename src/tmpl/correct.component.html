@@ -1,0 +1,209 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-9">
+    <article>
+        <p *ngIf="eMode == 8"
+           class="alert alert-error">{{w('error.notallratings')}}</p>
+        <p *ngIf="eMode == 9"
+           class="alert alert-error">{{w('error.notfound')}}</p>
+        <div *ngIf="!eMode || (eMode == 1 && !oRatingPerStudentInCourse)">
+            <p>{{w('wait')}}</p>
+            <ul>
+                <li>
+                    {{p('addnew', oProgress.ratings_total, w('rating', oProgress.ratings_total))}}: 
+                    <strong>{{oProgress.ratings_cnt.toString()}}</strong>/{{oProgress.ratings_total.toString()}}
+                </li>
+                <li *ngIf="oProgress.ratings_error.length > 0">
+                    <strong>{{w('error')}}</strong>
+                    <ol>
+                        <li *ngFor="let sError of oProgress.ratings_error">{{sError}}</li>
+                    </ol>
+                </li>
+                <li>
+                    {{p('addnew', oProgress.grades_total, w('grade', oProgress.grades_total))}}: 
+                    <strong>{{oProgress.grades_cnt.toString()}}</strong>/{{oProgress.grades_total.toString()}}
+                </li>
+                <li *ngIf="oProgress.grades_error.length > 0">
+                    <strong>{{w('error')}}</strong>
+                    <ol>
+                        <li *ngFor="let sError of oProgress.grades_error">{{sError}}</li>
+                    </ol>
+                </li>
+            </ul>
+            <div *ngIf="(oProgress.ratings_cnt + oProgress.ratings_error.length) == oProgress.ratings_total &&
+                        (oProgress.grades_cnt + oProgress.grades_error.length) == oProgress.grades_total">
+                
+                <p>{{w('error.reload')}}</p>
+                <a (click)="initialSetup()"
+                   class="btn btn-warning">{{w('reload')}}</a>
+            </div>
+        </div>
+        <div *ngIf="oRatingPerStudentInCourse && eMode == 1"><!-- correct -->
+            <h2>{{oRatingPerStudentInCourse.oRating.getName()}}</h2>
+            <p class="text-muted">
+                {{oRatingPerStudentInCourse.oStudentInCourse.oStudent.getName()}}
+                <span *ngIf="oRatingPerStudentInCourse.oStudentInCourse.oStudent.sName &&
+                             oRatingPerStudentInCourse.oStudentInCourse.oStudent.sNr"> &middot; 
+                    {{oRatingPerStudentInCourse.oStudentInCourse.oStudent.sNr}}
+                </span>
+                <span *ngIf="oRatingPerStudentInCourse.oStudentInCourse.oStudent.sName && 
+                             oRatingPerStudentInCourse.oStudentInCourse.oStudent.sMail"> &middot; 
+                    <a href="mailto:{{oRatingPerStudentInCourse.oStudentInCourse.oStudent.sMail}}">
+                        {{oRatingPerStudentInCourse.oStudentInCourse.oStudent.sMail}}
+                    </a>
+                </span><br />
+                {{oRatingPerStudentInCourse.oRating.oCourse.getName()}}, 
+                {{oRatingPerStudentInCourse.oRating.oSystem.getName()}}, 
+                {{w('fWeight')}}: 
+                {{oRatingPerStudentInCourse.oRating.oCourse.calculateWeightPercentage(oRatingPerStudentInCourse.oRating.fWeight)}}%
+            </p>
+			<p>
+                <grader-edit [sName]="'sNote'"
+							 [(oItem)]="oRatingPerStudentInCourse"></grader-edit>
+            </p>
+            <div *ngFor="let oCriteriaInCatalogue of oRatingPerStudentInCourse.oRating.oCatalogue.aCriteriaInCatalogue">
+                <dl>
+                    <dt>{{oCriteriaInCatalogue.oCriteria.getName()}}</dt>
+                    <dd>{{oCriteriaInCatalogue.oCriteria.sNote}}</dd>
+                </dl>
+                <div class="row">
+                    <div class="col-md-10">
+                        <textarea [(ngModel)]="oRatingPerStudentInCourse.getGrade(oCriteriaInCatalogue.nId).sNote"
+                                  (blur)="onUpdateGrade(oRatingPerStudentInCourse.getGrade(oCriteriaInCatalogue.nId))"
+                                  [disabled]="isVolatile(oRatingPerStudentInCourse.getGrade(oCriteriaInCatalogue.nId))"
+                                  class="form-control"
+                                  placeholder="{{w('sNote')}}"></textarea>
+                    </div>
+                    <div class="col-md-2">
+                        <input [(ngModel)]="oRatingPerStudentInCourse.getGrade(oCriteriaInCatalogue.nId).fPoints"
+                               (blur)="onUpdateGrade(oRatingPerStudentInCourse.getGrade(oCriteriaInCatalogue.nId))"
+                               [disabled]="isVolatile(oRatingPerStudentInCourse.getGrade(oCriteriaInCatalogue.nId))"
+                               min="{{oCriteriaInCatalogue.oCriteria.nMin}}"
+                               max="{{oCriteriaInCatalogue.oCriteria.nMax}}"
+                               class="form-control"
+                               type="number"
+                               placeholder="{{w('fPoints', 2)}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <p class="col-md-10 text-md-right">
+                    <em>{{w('fPointsTotal')}}</em>
+                </p>
+                <p class="col-md-2">
+                    <em>{{oRatingPerStudentInCourse.getSumOfPoints()}}</em>
+                </p>
+            </div>
+            <div class="row alert alert-info">
+                <p class="col-md-10 text-md-right">
+                    <br />{{w('correction.fGrade')}}
+                </p>
+                <p class="col-md-2">
+                    <strong>{{w('fGrade')}}</strong><br />
+                    <select [ngModel]="oRatingPerStudentInCourse.fGrade || '---'"
+                            (ngModelChange)="onUpdateRatingGrade($event)"
+                            [disabled]="isVolatile(oRatingPerStudentInCourse)"
+                            class="form-control">
+                        <option value="---">---</option>
+                        <option *ngFor="let nGrade of oRatingPerStudentInCourse.oRating.oSystem.aGrade"
+                                value="{{nGrade}}">{{nGrade}}</option>
+                    </select>
+                </p>
+            </div>
+            <div class="row">
+                <p class="col-md-10">
+                    <a (click)="goBack()"
+                       class="btn btn-default">{{s('backto', oRatingPerStudentInCourse.oRating.getName())}}</a>
+                    <a (click)="pause()"
+                       class="btn btn-info pull-right"><i class="fa fa-pause"></i> {{w('pause')}}</a>
+                </p>
+                <p class="col-md-2">
+                    <a (click)="gotoNextStudent(true)"
+                       class="btn btn-primary form-control">{{w('correctiondone')}}</a>
+                </p>
+            </div>
+        </div>
+        <div *ngIf="eMode == 2"><!-- pause -->
+            <p>
+                <progress class="progress progress-success" 
+                          value="{{getRatingsPerStudentsInCourse().length-getRatingsPerStudentsInCourse(true).length}}" 
+                          max="{{getRatingsPerStudentsInCourse().length}}">
+                    {{100*(getRatingsPerStudentsInCourse().length-getRatingsPerStudentsInCourse(true).length)/getRatingsPerStudentsInCourse().length}} %
+                </progress>
+            </p>
+            <div class="row">
+                <p class="col-md-4">
+                    <i class="fa fa-check-square-o"></i> 
+                    {{s('xdone', getRatingsPerStudentsInCourse().length-getRatingsPerStudentsInCourse(true).length)}}<br />
+                    
+                    <i class="fa fa-square-o"></i> 
+                    {{s('xopen', getRatingsPerStudentsInCourse(true).length)}}
+                </p>
+                <p *ngIf="getRatingsPerStudentsInCourse().length-getRatingsPerStudentsInCourse(true).length > 0"
+                   class="col-md-8">
+                    {{w('correctiontimeavg')}}: 
+                    {{ calcAvgTimeInSeconds() | convertSecondsToDate | date:'HH:mm:ss' }}<br />
+                    
+                    {{w('correctiontimeest')}}: 
+                    {{ getRatingsPerStudentsInCourse(true).length*calcAvgTimeInSeconds() | convertSecondsToDate | date:'HH:mm:ss' }}
+                </p>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <a (click)="goBack()"
+                       class="btn btn-default">{{s('backto', oRatingPerStudentInCourse.oRating.getName())}}</a>
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <a (click)="pause(true)"
+                       class="btn btn-primary"><i class="fa fa-play"></i> {{w('unpause')}}</a>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="eMode == 3"><!-- finish -->
+            <h3>{{w('correctiondone')}}</h3>
+            <p>
+                {{w('correctiontimeavg')}}: 
+                {{ calcAvgTimeInSeconds() | convertSecondsToDate | date:'HH:mm:ss' }}
+            </p>
+            <p>
+                {{w('correctiontimesum')}}: 
+                {{ calcTotalTimeInSeconds() | convertSecondsToDate | date:'HH:mm:ss' }}
+            </p>
+            <p class="text-md-right">
+                <a (click)="goBack()"
+                   class="btn btn-primary">{{s('backto', oRatingPerStudentInCourse.oRating.getName())}}</a>
+            </p>
+        </div>
+    </article>
+</div>
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-3">
+    <aside *ngIf="oRatingPerStudentInCourse">
+        <h6>{{w('quicklink')}}</h6>
+        <select [ngModel]="oRatingPerStudentInCourse.nId"
+                (ngModelChange)="jumpFromQuicklink($event)"
+                class="form-control">
+            <option *ngFor="let oRatingPerStudentInCourse of getRatingsPerStudentsInCourse()"
+                    value="{{oRatingPerStudentInCourse.nId}}">{{oRatingPerStudentInCourse.oStudentInCourse.oStudent.getName()}}</option>
+        </select>
+    </aside>
+    <aside *ngIf="eMode == 1">
+        <h6>{{w('overview')}} &middot; <strong>{{s('xtry', nTry)}}</strong></h6>
+        <p>
+            <i class="fa fa-check-square-o"></i> {{s('xdone', getRatingsPerStudentsInCourse().length-getRatingsPerStudentsInCourse(true).length)}}<br />
+            <i class="fa fa-square-o"></i> {{s('xopen', getRatingsPerStudentsInCourse(true).length)}}<br />
+            <progress class="progress progress-success" 
+                      value="{{getRatingsPerStudentsInCourse().length-getRatingsPerStudentsInCourse(true).length}}" 
+                      max="{{getRatingsPerStudentsInCourse().length}}">
+                {{100*(getRatingsPerStudentsInCourse().length-getRatingsPerStudentsInCourse(true).length)/getRatingsPerStudentsInCourse().length}} %
+            </progress>
+        </p>
+    </aside>
+    <aside *ngIf="eMode == 1 && oRatingPerStudentInCourse">
+        <h6>{{w('time')}}</h6>
+        <p>
+            {{ nElapsed | convertSecondsToDate | date:'HH:mm:ss' }}
+            <span *ngIf="oRatingPerStudentInCourse.bDone"
+                  class="label label-success">{{w('correctiondone')}}</span>
+        </p>
+    </aside>
+</div>

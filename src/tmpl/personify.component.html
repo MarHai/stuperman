@@ -1,0 +1,48 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-9">
+    <article *ngIf="oCurrentStudentInCourse">
+        <h1>{{oCurrentStudentInCourse.oStudent.getName()}}</h1>
+        
+        <grader-seatmap [(oCourse)]="oCourse"
+                        [bSeating]="true"
+                        [bSeatOnly]="true"
+                        [(oStudentInCourseToBeSeated)]="oCurrentStudentInCourse"></grader-seatmap>
+        
+        <grader-img [(oItem)]="oCurrentStudentInCourse.oStudent"
+                    [bEdit]="true"
+                    [bDirectInsert]="true"></grader-img>
+        
+        <div class="clearfix">
+            <a (click)="gotoNextStudent()"
+               class="a btn btn-primary pull-md-right">{{w('next')}}</a>
+            <a (click)="goBack()"
+               class="a btn btn-default">{{w('back')}}</a>
+        </div>
+        <a [routerLink]="[ '/app', 'course', oCourse.nId ]"
+           class="a">{{s('backto', oCourse.getName())}}</a>
+    </article>
+</div>
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-3">
+    <aside *ngIf="oCourse">
+        <h6>{{w('quicklink')}}</h6>
+        <select [ngModel]="'0'"
+                (ngModelChange)="jumpFromQuicklink($event)"
+                class="form-control">
+            <option *ngFor="let oStudentInCourse of getStudents()"
+                    value="{{oStudentInCourse.nId}}">{{oStudentInCourse.oStudent.getName()}}</option>
+        </select>
+    </aside>
+    <aside>
+        <h6>{{w('overview')}}</h6>
+        <p>
+            <i class="fa fa-check-square-o"></i> {{s('xdone', oCourse.aStudentInCourse.length-getNotYetPersonifiedStudents().length)}}<br />
+            <i class="fa fa-square-o"></i> {{s('xopen', getNotYetPersonifiedStudents().length)}}<br />
+            <progress class="progress progress-success" 
+                      value="{{oCourse.aStudentInCourse.length-getNotYetPersonifiedStudents().length}}" 
+                      max="{{oCourse.aStudentInCourse.length}}">
+                {{100*(oCourse.aStudentInCourse.length-getNotYetPersonifiedStudents().length)/oCourse.aStudentInCourse.length}} %
+            </progress>
+        </p>
+    </aside>
+</div>

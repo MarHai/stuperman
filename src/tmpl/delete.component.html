@@ -1,0 +1,6 @@
+<a (click)="onClickDelete()"
+   *ngIf="!bIconOnly"
+   class="{{sLinkClass}}">{{s('delete', oItem.getName())}}</a>
+<a (click)="onClickDelete()"
+   *ngIf="bIconOnly"
+   class="{{sLinkClass}}"><i class="fa fa-trash-o"></i></a>

@@ -1,0 +1,151 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-12">
+    <article>
+        <div *ngIf="oCourse">
+            <h2>
+				<grader-edit [sName]="'sName'"
+							 [(oItem)]="oCourse"
+							 [bRequired]="true"></grader-edit>
+                <small class="text-muted">
+                    <grader-edit [sName]="'sCategory'"
+                                 [(oItem)]="oCourse"></grader-edit>
+                </small>
+			</h2>
+            
+            
+            <h3 *ngIf="oCourse.nWidth > 0 && oCourse.nHeight > 0">
+                {{w('seatmap')}}
+            </h3>
+            <grader-seatmap [oCourse]="oCourse"></grader-seatmap>
+            
+            <h3>{{w('rating', oCourse.aRating.length)}}</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>{{w('sName')}}</th>
+                            <th>{{w('system')}}</th>
+                            <th width="25%">{{w('fWeight')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody [sort]="oCourse.aRating">
+                        <tr *ngFor="let oRating of oCourse.aRating"
+                            id="rating:{{oRating.nId.toString()}}">
+                            <td><i class="fa fa-arrows-v move"></i></td>
+                            <th (click)="onClickRating(oRating)"
+                                class="a">
+                                {{oRating.getName()}}
+                                <ul *ngIf="oRating.numOfTries() > 1"
+                                    class="fa-ul text-muted">
+                                    <li *ngFor="let nTry of getTries(oRating)">
+                                        <i class="fa-li fa fa-repeat"></i> 
+                                        {{s('courseratingtryx', nTry, oRating.getRatings(0, nTry).length, w('student', oRating.getRatings(0, nTry).length))}}
+                                    </li>
+                                </ul>
+                                <a (click)="onClickAddTry(oRating, $event)"
+                                   class="btn btn-secondary btn-sm pull-xs-right">{{s('addnew', w('nTry'))}}</a>
+                            </th>
+                            <td (click)="onClickRating(oRating)"
+                                class="a">
+                                {{oRating.oSystem.getName()}}
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input [(ngModel)]="oRating.fWeight"
+                                           (blur)="onUpdateWeight(oRating)"
+                                           [disabled]="isVolatile(oRating)"
+                                           type="number"
+                                           class="form-control" />
+                                    <span class="input-group-addon">{{oCourse.calculateWeightPercentage(oRating.fWeight)}}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <grader-add [oItem]="getEmptyRating()"
+                        [sValue]="s('addto', w('rating'), oCourse.getName())"
+                        [aHidden]="[ 'nCouId' ]"></grader-add>
+            
+            
+            <div *ngIf="getStudentsInCourse().length > 0"
+                 class="row">
+                <grader-chart [sType]="'histogram'"
+                              [aData]="aHistogramData"
+                              [aLabel]="aHistogramLabel"
+                              [aSeries]="[ w('fGradeTotal') ]"
+                              *ngIf="aHistogramData.length > 0"
+                              class="col-md-8"></grader-chart>
+                <div class="col-md-4">
+                    <div class="alert alert-info">
+                        {{w('coursegradeinfo')}}
+                        <ul>
+                            <li><a [routerLink]="[ 'grade' ]">{{w('coursegrade')}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+
+            <grader-download-csv *ngIf="getStudentsInCourse().length > 0"
+                                 [aHead]="aCsvHead"
+								 [aData]="aCsvData"
+								 [sFilename]="oCourse.getName()"
+								 [sClass]="'a btn btn-secondary btn-sm pull-md-right'"
+								 [sText]="s('xdownload', w('student', getStudentsInCourse().length))"></grader-download-csv>
+            <h3>{{w('student', getStudentsInCourse().length)}}</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{w('sName')}}</th>
+                            <th *ngFor="let oRating of oCourse.aRating">{{oRating.getName()}}</th>
+                            <th>{{w('fGradeTotal')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let oStudentInCourse of getStudentsInCourse(); let i = index"
+                            (click)="onClickStudentInCourse(oStudentInCourse)"
+                            class="a">
+                            <td>{{i+1}}.</td>
+                            <th>{{oStudentInCourse.oStudent.getName()}}</th>
+                            <td *ngFor="let oRating of oCourse.aRating">
+                                <p *ngIf="oStudentInCourse.numOfTries(oRating.nId) <= 1">{{oStudentInCourse.stringifyFinalGrade(oRating)}}</p>
+                                <ul *ngIf="oStudentInCourse.numOfTries(oRating.nId) > 1"
+                                    class="fa-ul">
+                                    <li *ngFor="let oTry of oStudentInCourse.getRatings(oRating.nId, 0)">
+                                        <i class="fa-li fa fa-repeat"></i> 
+                                        {{s('studentratingtryx', oTry.fGrade, oTry.nTry)}}
+                                    </li>
+                                    <li *ngIf="oStudentInCourse.getRatings(oRating.nId, 0).length < oStudentInCourse.numOfTries(oRating.nId)">
+                                        <i class="fa-li fa fa-repeat"></i> 
+                                        {{s('studentratingtryx', w('coursegradenotyet'), oStudentInCourse.numOfTries(oRating.nId))}}
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>{{oStudentInCourse.fGrade}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="clearfix">
+                <a [routerLink]="[ 'add' ]"
+                   class="a btn btn-success pull-md-right">
+                    {{s('addto', w('student'), oCourse.getName())}}
+                </a>
+            </p>
+            
+            <grader-delete [(oItem)]="oCourse"></grader-delete>
+            
+            <grader-stu2cou [oStudentInCourse]="oStudentInCourseToShow"
+                            [bShow]="oStudentInCourseToShow !== null"
+                            (onHide)="onHideStudentInCourse($event)"></grader-stu2cou>
+            
+            <grader-addtry [oRating]="oRatingToAddTry"
+                           [bDisplayNow]="oRatingToAddTry !== null"
+                           (onHide)="onHideRatingToAddTry($event)"></grader-addtry>
+        </div>
+    </article>
+</div>

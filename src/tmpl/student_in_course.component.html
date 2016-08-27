@@ -1,0 +1,100 @@
+<div id="stu2cou-modal" class="modal" role="dialog" data-keyboard="true" data-show="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div *ngIf="oStudentInCourse"
+             class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{oStudentInCourse.oStudent.getName()}}</h4>
+            </div>
+            <div class="modal-body">
+                <div [class.row]="oStudentInCourse.oStudent.sImage">
+                    <div [class.col-sm-9]="oStudentInCourse.oStudent.sImage">
+                        <p class="alert alert-info">
+                            {{s('stu2couratingchart', oStudentInCourse.oStudent.getName(), oStudentInCourse.oCourse.getName(), oStudentInCourse.getRatingsFromFinalTry().length, w('rating', oStudentInCourse.getRatingsFromFinalTry().length), getMeanGrade())}}
+                        </p>
+                    </div>
+                    <div *ngIf="oStudentInCourse.oStudent.sImage"
+                         class="col-sm-3 text-xs-right">
+                        <h1 class="display-1">
+                            <grader-img [(oItem)]="oStudentInCourse.oStudent"
+                                        [sCssClass]="'center-block'"></grader-img>
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <grader-chart *ngIf="oStudentInCourse.getRatingsFromFinalTry().length > 1"
+                                  [sType]="'development'"
+                                  [aData]="getChartData()"
+                                  [aLabel]="getChartLabels()"
+                                  [aSeries]="[ w('grade') ]"
+                                  class="offset-xs-1 col-xs-10"></grader-chart>
+                </div>
+
+                <div id="stu2rat" role="tablist" aria-multiselectable="true">
+                    <div *ngFor="let oRatingPerStudentInCourse of oStudentInCourse.getRatings(0, 0)"
+                         class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a [class.collapsed]="nS2RIdOpen != oRatingPerStudentInCourse.nId"
+                                   href="#stu2rat-{{oRatingPerStudentInCourse.nId}}-content" data-toggle="collapse" data-parent="#stu2rat">
+                                    {{oRatingPerStudentInCourse.oRating.getName()}} 
+                                    <span *ngIf="oRatingPerStudentInCourse.nTry > 0">
+                                        &middot; {{s('xtry', oRatingPerStudentInCourse.nTry)}}
+                                    </span> 
+                                    <span *ngIf="oRatingPerStudentInCourse.fGrade">
+                                        &middot; {{w('grade')}}: {{oRatingPerStudentInCourse.fGrade}}
+                                    </span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div [class.in]="nS2RIdOpen == oRatingPerStudentInCourse.nId"
+                             id="stu2rat-{{oRatingPerStudentInCourse.nId}}-content" class="panel-collapse collapse" role="tabpanel">
+                            <p>{{oRatingPerStudentInCourse.sNote}}</p>
+                            
+                            <div class="clearfix m-b-1">
+                                <email-add [sTo]="'student:' + oStudentInCourse.oStudent.nId.toString()"
+                                           [sMessage]="getMessageBody(oRatingPerStudentInCourse)"
+                                           [sLink]="w('stu2cousendrating')"
+                                           [sLinkClass]="'a btn btn-secondary btn-sm pull-md-right'"></email-add>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>{{w('criteria')}}</th>
+                                            <th>{{w('sNote')}}</th>
+                                            <th>{{w('fPoints', 2)}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let oGrade of oRatingPerStudentInCourse.aGrade">
+                                            <th>{{oGrade.oCriteriaInCatalogue.oCriteria.getName()}}</th>
+                                            <td>{{oGrade.sNote}}</td>
+                                            <td>{{oGrade.fPoints}}/{{oGrade.oCriteriaInCatalogue.oCriteria.nMax}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>{{w('sum')}}</td>
+                                            <td></td>
+                                            <th>{{oRatingPerStudentInCourse.getSumOfPoints()}}</th>
+                                        </tr>
+                                        <tr>
+                                            <td>{{w('fGrade')}}</td>
+                                            <td>{{s('xtry', oRatingPerStudentInCourse.nTry)}}</td>
+                                            <th>{{oRatingPerStudentInCourse.fGrade}}</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-xs-left">
+                <grader-delete [(oItem)]="oStudentInCourse"></grader-delete>
+            </div>
+        </div>
+    </div>
+</div>

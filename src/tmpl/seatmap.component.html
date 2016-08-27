@@ -1,0 +1,118 @@
+<p *ngIf="!oCourse.nWidth || !oCourse.nHeight">
+    <a (click)="onClickCreateSeating()">{{w('seatmapcreate')}}</a>.
+</p>
+<div *ngIf="aSeating && oCourse.nWidth > 0 && oCourse.nHeight > 0"
+     class="row">
+    <div [class.col-md-9]="!bSeatOnly"
+         [class.col-md-12]="bSeatOnly">
+        <p *ngIf="bSeating && nXToBeSeated !== null && nYToBeSeated !== null"
+           class="alert alert-success">
+            {{w('seatmapchoose')}}
+            <a (click)="abortSeating()"
+               class="alert-link pull-md-right">{{w('abort')}}</a>
+        </p>
+        <div *ngIf="aSeating && !bSeating || nXToBeSeated === null || nYToBeSeated === null"
+             class="table-responsive">
+            <table class="seatmap">
+                <tbody>
+                    <tr *ngFor="let aSeatingRow of aSeating; let i = index">
+                        <td *ngFor="let oStudentInCourse of aSeatingRow; let j = index"
+                            (click)="seat(j, i, oStudentInCourse)"
+                            [class.occupied]="oStudentInCourse"
+                            class="a">
+                            <img *ngIf="oStudentInCourse && oStudentInCourse.oStudent && oStudentInCourse.oStudent.sImage"
+                                 src="{{oStudentInCourse.oStudent.sImage}}"
+                                 class="img-fluid"
+                                 alt="{{oStudentInCourse.oStudent.getName()}}" />
+                            <span *ngIf="oStudentInCourse && oStudentInCourse.oStudent">
+                                {{oStudentInCourse.oStudent.getName()}}
+                            </span>
+                            <span *ngIf="!oStudentInCourse">
+                                &nbsp;
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div *ngIf="!bSeatOnly"
+         class="col-md-3">
+        <p *ngIf="bSeating && oStudentInCourseToBeSeated"
+           class="alert alert-success">
+            {{w('seatmapplace')}}
+            <a (click)="abortSeating()"
+               class="alert-link">{{w('abort')}}</a>
+        </p>
+        <div *ngIf="(!bSeating || !oStudentInCourseToBeSeated) && getUnseated().length > 0">
+            <h5>
+                {{w('seatmapstart')}}
+            </h5>
+            <p>
+                <select [ngModel]="nStudentInCourseToBeSeated"
+                        (ngModelChange)="onPlaceUnseatedChange($event)"
+                        class="form-control">
+                    <option value="0">{{w('choose')}}</option>
+                    <option *ngFor="let oStudentInCourse of getUnseated()"
+                            value="{{oStudentInCourse.nId}}">
+                        {{oStudentInCourse.oStudent.getName()}}
+                    </option>
+                </select>
+            </p>
+        </div>
+        <h5 *ngIf="!bSeating">{{w('seatmapsize')}}</h5>
+        <div *ngIf="!bSeating"
+             class="input-group">
+            <span class="input-group-addon"><i class="fa fa-arrows-h fa-fw"></i></span>
+            <input [ngModel]="nSeatmapWidth"
+                   (ngModelChange)="onChangeSize($event, null)"
+                   [disabled]="bVolatile"
+                   class="form-control"
+                   type="number" />
+        </div>
+        <div *ngIf="!bSeating"
+             class="input-group">
+            <span class="input-group-addon"><i class="fa fa-arrows-v fa-fw"></i></span>
+            <input [ngModel]="nSeatmapHeight"
+                   (ngModelChange)="onChangeSize(null, $event)"
+                   [disabled]="bVolatile"
+                   class="form-control"
+                   type="number" />
+        </div>
+        <div class="btn-group m-t-3">
+            <a (click)="onClickPrint()"
+               class="a btn btn-secondary btn-sm">
+                <i class="fa fa-print"></i> 
+                {{w('seatmapprintshort')}}
+            </a>
+            <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+                <span class="sr-only">&darr;</span>
+            </button>
+            <div class="dropdown-menu">
+                <a (click)="onClickPrint()"
+                   class="dropdown-item">
+                    <i class="fa fa-print"></i> 
+                    {{w('seatmapprint')}}
+                </a>
+                <a (click)="onClickEmptyAll()"
+                   class="dropdown-item">
+                    <i class="fa fa-ban"></i> 
+                    {{w('seatmapclearseats')}}
+                </a>
+                <a (click)="onClickPlaceAll()"
+                   class="dropdown-item">
+                    <i class="fa fa-braille"></i> 
+                    {{w('seatmapplaceall')}}
+                </a>
+                <a (click)="onClickRandomize()"
+                   [class.disabled]="getUnseated().length == 0"
+                   class="dropdown-item">
+                    <i class="fa fa-random"></i> 
+                    {{w('seatmaprandom')}}
+                </a>
+            </div>
+        </div>
+        <a (click)="onClickDeleteSeating()"
+           class="btn btn-danger btn-sm m-t-1">{{s('delete', w('seatmap'))}}</a>
+    </div>
+</div>

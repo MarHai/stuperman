@@ -1,0 +1,76 @@
+<div #oModal
+     class="modal" role="dialog" data-keyboard="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form (ngSubmit)="onClickSend(oModal)">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        {{w('newmail')}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset class="form-group row">
+                        <label class="col-sm-3 form-control-label">{{w('sRecipient')}}</label>
+                        <div class="col-sm-9">
+                            <select [ngModel]="sTo"
+                                    (ngModelChange)="onChangeRecipient($event)"
+                                    [ngModelOptions]="{standalone: true}"
+                                    [class.form-control-danger]="!bValidRecipient"
+                                    class="form-control">
+                                <optgroup *ngIf="aRecipientSelectionUser.length > 0"
+                                          label="{{w('user', aRecipientSelectionUser.length)}}">
+                                    <option *ngFor="let oUser of aRecipientSelectionUser"
+                                            value="user:{{oUser.nId.toString()}}">{{oUser.getName()}}</option>
+                                </optgroup>
+                                <optgroup *ngIf="aRecipientSelectionStudent.length > 0"
+                                          label="{{w('student', aRecipientSelectionStudent.length)}}">
+                                    <option *ngFor="let oStudent of aRecipientSelectionStudent"
+                                            value="student:{{oStudent.nId.toString()}}">{{oStudent.getName()}}</option>
+                                </optgroup>
+                            </select>
+                            <p *ngIf="sRecipientEmailAddress"
+                               class="text-muted">
+                                {{s('sendto', sRecipientEmailAddress)}}
+                            </p>
+                            <p *ngIf="!sRecipientEmailAddress"
+                               class="alert alert-warning">
+                                {{w('error.norecipient')}}
+                            </p>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group row">
+                        <label class="col-sm-3 form-control-label">{{w('sSubject')}}</label>
+                        <div class="col-sm-9">
+                            <input [(ngModel)]="sSubject"
+                                   [ngModelOptions]="{standalone: true}"
+                                   [class.form-control-danger]="!bValidSubject"
+                                   [focus]="bShowForm"
+                                   class="form-control" />
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group row">
+                        <label class="col-sm-3 form-control-label">{{w('email')}}</label>
+                        <div class="col-sm-9">
+                            <textarea [(ngModel)]="sMessage"
+                                      [ngModelOptions]="{standalone: true}"
+                                      [class.form-control-danger]="!bValidMessage"
+                                      class="form-control"
+                                      rows="8"></textarea>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <a (click)="onClickAbort(oModal)"
+                       [class.disabled]="bVolatile"
+                       class="btn btn-default">{{w('abort')}}</a>
+                    <input [disabled]="bSending || !bValidRecipient || !bValidSubject || !bValidMessage"
+                           type="submit" class="btn btn-primary" value="{{w('send')}}" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div><a (click)="onClickNew(oModal)"
+         *ngIf="!bIconOnly"
+         class="{{sLinkClass}}">{{sLink}}</a><a (click)="onClickNew(oModal)"
+                                                *ngIf="bIconOnly"
+                                                class="{{sLinkClass}}"><i class="fa fa-envelope-o"></i></a>

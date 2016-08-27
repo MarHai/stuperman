@@ -1,0 +1,92 @@
+<div #oModal
+     class="modal" role="dialog" data-keyboard="true">
+    <div *ngIf="oRating"
+         class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form (ngSubmit)="onClickSubmit()">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        {{s('addto', w('nTry'), oRating.getName())}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset class="form-group row">
+                        <label class="col-sm-3 form-control-label" attr.for="grader-add-try">{{w('nTry')}}</label>
+                        <div class="col-sm-9">
+                            <select [ngModel]="nTry"
+                                    (ngModelChange)="onChangeTry($event)"
+                                    [ngModelOptions]="{standalone: true}"
+                                    [disabled]="bVolatile"
+                                    class="form-control" id="grader-add-try">
+                                <option *ngFor="let nTryIterator of getTryPossibilities()"
+                                        value="{{nTryIterator}}">{{nTryIterator}}</option>
+                            </select>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group row">
+                        <label class="col-sm-3 form-control-label" attr.for="grader-add-students">{{w('student', 2)}}</label>
+                        <div class="col-sm-9">
+                            <p class="text-muted">{{w('addtry.students')}}</p>
+                            <div *ngIf="aStudentInCourse.length > 0"
+                                 class="alert alert-success">
+                                <a *ngFor="let oStudentInCourse of aStudentInCourse"
+                                   (click)="onClickRemove(oStudentInCourse)"
+                                   title="{{w('remove')}}"
+                                   class="label label-default m-r-1">
+                                    {{oStudentInCourse.oStudent.getName()}}
+                                </a>
+                                <a (click)="onClickRemoveAll()"
+                                   [class.disabled]="bVolatile"
+                                   class="btn btn-danger btn-sm pull-xs-right">{{w('addtry.removeall')}}</a>
+                            </div>
+                            <div class="input-group">
+                                <input (keyup)="onStudentSearch($event)"
+                                       [(ngModel)]="sStudentSearch"
+                                       [ngModelOptions]="{standalone: true}"
+                                       [focus]="true"
+                                       [disabled]="bVolatile"
+                                       type="text" class="form-control" id="grader-add-students" placeholder="{{s('add', w('student', 1))}}" autocomplete="off" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a (click)="onClickAddAll()"
+                                           [class.disabled]="bVolatile"
+                                           class="dropdown-item">{{s('addtry.addall', w('student', 2))}}</a>
+                                        <a (click)="onClickAddNegative()"
+                                           [class.disabled]="bVolatile"
+                                           class="dropdown-item">{{w('addtry.addnegative')}}</a>
+                                        <a (click)="onClickAddNotYetGraded()"
+                                           [class.disabled]="bVolatile"
+                                           class="dropdown-item">{{w('addtry.addnotyetgraded')}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <p *ngIf="sStudentSearch != '' && aResult.length == 0"
+                                class="text-muted">{{w('searchnoresults')}}</p>
+                            <ul *ngIf="sStudentSearch != '' && aResult.length > 0"
+                                class="nav nav-pills nav-stacked">
+                                <li *ngFor="let oStudentInCourse of aResult"
+                                    class="nav-item">
+                                    <a (click)="onClickStudentInCourse(oStudentInCourse)"
+                                       [class.active]="nActiveIndex >= 0 && aResult[nActiveIndex] && aResult[nActiveIndex].nId == oStudentInCourse.nId"
+                                       class="a nav-link">
+                                        {{oStudentInCourse.oStudent.getName()}} 
+                                        <small class="text-muted">{{oStudentInCourse.numOfTries(oRating.nId)}} {{w('nTry', oStudentInCourse.numOfTries(oRating.nId))}}</small>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <a (click)="onClickAbort()"
+                       [class.disabled]="bVolatile"
+                       class="btn btn-default">{{w('abort')}}</a>
+                    <input [disabled]="bVolatile"
+                           type="submit" class="btn btn-primary" value="{{w('save')}}" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

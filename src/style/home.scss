@@ -1,0 +1,441 @@
+@import "main";
+
+a, .a {
+    color: $color2 !important;
+
+    &:hover, &:focus {
+        color: $color3 !important;
+        text-decoration: none;
+    }
+}
+
+.btn-primary {
+    color: white !important;
+}
+
+@media screen and (max-width: $screen-sm-max) {
+    .fullscreen-image-background {
+        background-image: url('../img/stuperman.svg');
+        background-size: 60% 100%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        padding-top: 100%;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@media screen and (min-width: $screen-md-min) {
+    .fullscreen-image-background {
+        background-image: url('../img/stuperman.svg');
+        background-size: 60% 100%;
+        background-repeat: no-repeat;
+        background-position: 10% center;
+        background-attachment: fixed;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.navbar {
+    .navbar-brand {
+        padding: .75rem 1rem;
+
+        img {
+            width: 3rem;
+            height: auto;
+        }
+    }
+
+    ul.nav {
+        padding: .75rem 0;
+
+        & > li {
+            margin: 0 .75rem;
+
+            & > a {
+                padding: .5rem;
+                border-bottom: 2px solid transparent;
+                font-size: .8rem;
+                font-weight: 700;
+                color: $gray;
+
+                &:focus {
+                    outline: none;
+                }
+
+                &:hover {
+                    border-bottom: 2px solid $gray;
+                    padding-bottom: 0;
+                    outline: none;
+                }
+            }
+        }
+    }
+
+    &.navbar-light {
+        background-color: lightgray;
+        border-bottom: 1px solid $gray;
+
+        ul.nav {
+            & > li {
+                & > a {
+                    color: darken($gray, $step_size);
+
+                    &:hover {
+                        border-bottom-color: darken($gray, $step_size);
+                    }
+
+                    @media screen and (max-width: $screen-xs-max) {
+                        border-bottom: none;
+                        padding-top: 1rem;
+                        padding-bottom: 1remn;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    @media screen and (max-width: $screen-sm-max) {
+        .navbar-collapse {
+            display: none;
+        }
+    }
+
+    @media screen and (min-width: $screen-md-min) {
+        .navbar-toggler {
+            display: none;
+        }
+    }
+}
+
+.parallax {
+    background-attachment: fixed !important;
+    background-size: cover;
+
+    @media screen and (max-width: $screen-md-max) {
+        & {
+            background-attachment: scroll;
+            background-position: initial;
+            background-repeat: no-repeat;
+        }
+    }
+    
+    blockquote {
+        color: white;
+    }
+
+    &#parallax-1 {
+        background-image: url('../img/parallax_1.jpg');
+    }
+
+    &#parallax-2 {
+        background-image: url('../img/parallax_2.jpg');
+    }
+
+    &#parallax-3 {
+        background-image: url('../img/parallax_3.jpg');
+    }
+
+    &#parallax-4 {
+        background-image: url('../img/parallax_4.jpg');
+    }
+}
+
+.section {
+    background-color: $colorbg;
+    padding: 5rem 0;
+
+    .section-heading {
+        text-align: center;
+        margin-bottom: 2rem;
+
+        h2 {
+            font-size: 3rem;
+            color: $color2;
+        }
+
+        p {
+            font-size: 1.5rem;
+            color: $color3;
+        }
+
+        hr {
+            display: inline-block;
+            vertical-align: middle;
+            *vertical-align: auto;
+            *zoom: 1;
+            *display: inline;
+            width: 3.5rem;
+            border-top: 1px solid darken($gray, 2*$step_size);
+        }
+    }
+
+    .section-content {
+        h3 {
+            color: $color3;
+        }
+    }
+
+    &.about {
+        position: relative;
+        text-align: center;
+    }
+
+    &.benefits {
+        .skill-name {
+            display: block;
+            font-size: 1.5rem;
+            color: darken($gray, 2*$step_size);
+            font-weight: 400;
+        }
+
+        .benefit-icon {
+            font-size: 4rem;
+            color: $color2;
+            display: block;
+            margin-bottom: .5rem;
+            margin-top: .5rem;
+        }
+    }
+
+    &.features {
+        .service-item {
+            margin-bottom: 2rem;
+
+            .service-icon {
+                position: absolute;
+                top: 0;
+                font-size: 3rem;
+                color: $color2;
+            }
+
+            .service-text {
+                margin-left: 4rem;
+                overflow: hidden;
+            }
+
+            .service-text h3 {
+                margin-top: .5rem;
+                color: darken($gray, 2*$step_size);
+            }
+
+            .service-text p {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &.contact {
+        .contact-info {
+            margin-bottom: 2rem;
+
+            li {
+                padding-bottom: 2rem;
+                
+                h3 {
+                    color: darken($gray, 2*$step_size);
+                }
+
+                i {
+                    font-size: 2rem;
+                    color: $color2;
+                }
+            }
+
+            @media screen and (max-width: $screen-md-max) {
+                & {
+                    text-align: center;
+
+                    i {
+                        width: 100%;
+                    }
+
+                    h3, p {
+                        padding-left: 0;
+                    }
+                }
+            }
+
+            @media screen and (max-width: $screen-sm-max) {
+                & {
+                    padding-bottom: 0;
+                }
+            }
+        }
+
+        .contact-form {
+            overflow: hidden;
+            margin-bottom: 2rem;
+
+            input[type="text"], input[type="email"], select, textarea {
+                display: inline-block;
+                vertical-align: middle;
+                *vertical-align: auto;
+                *zoom: 1;
+                *display: inline;
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                margin-bottom: .5rem;
+                min-height: 3rem;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            textarea {
+                width: 100%;
+                display: block;
+                padding: 1rem;
+                min-height: 14rem;
+            }
+
+            select {
+                cursor: pointer;
+            }
+
+            .form-group {
+                margin-bottom: 0;
+            }
+
+            @media screen and (max-width: $screen-sm-max) {
+                .btn {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+.hero-unit {
+    position: relative;
+    height: 100%;
+
+    .hero-content {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        margin-top: -10em;
+        z-index: 2;
+
+        @media screen and (max-width: $screen-md-max) {
+            & {
+                text-align: center;
+                margin-top: -5rem;
+            }
+        }
+
+        @media screen and (max-width: $screen-xs-max) {
+            & {
+                margin-top: -2rem;
+            }
+        }
+
+        .hero-text {
+            .hero-heading {
+                font-size: 5rem;
+
+                .name {
+                    border-bottom: 2px solid $gray;
+                }
+
+                @media screen and (max-width: $screen-sm-max) {
+                    & {
+                        font-size: 2rem;
+                    }
+                }
+
+                @media screen and (max-width: $screen-md-max) {
+                    & {
+                        font-size: 4rem;
+                    }
+                }
+            }
+        }
+
+        .hero-buttons {
+            z-index: 2;
+
+            .btn {
+                margin: 0 1rem;
+                padding: 1rem 2.5rem;
+                font-weight: 400;
+            }
+        }
+
+        .slide-caption {
+            padding-bottom: 2.5rem;
+            margin: 0 auto;
+
+            @media screen and (max-width: $screen-sm-max) {
+                & {
+                    padding-bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+footer {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    margin: 0;
+
+    a, .a {
+        color: inherit;
+        padding-bottom: 2px;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+    }
+
+    a:hover, .a:hover, a:focus, .a:focus {
+        color: darken($colorbg, 2*$step_size) !important;
+        text-decoration: none;
+    }
+}
+
+.back-to-top {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 99;
+
+    a {
+        -moz-border-radius: .5rem;
+        -webkit-border-radius: .5rem;
+        border-radius: .5rem;
+        -moz-transition-property: background-color;
+        -o-transition-property: background-color;
+        -webkit-transition-property: background-color;
+        transition-property: background-color;
+        -moz-transition-duration: 0.2s;
+        -o-transition-duration: 0.2s;
+        -webkit-transition-duration: 0.2s;
+        transition-duration: 0.2s;
+        -moz-transition-timing-function: linear;
+        -o-transition-timing-function: linear;
+        -webkit-transition-timing-function: linear;
+        transition-timing-function: linear;
+        display: block;
+        padding: .75rem 1rem;
+        font-size: 2rem;
+        line-height: 2rem;
+        color: darken($gray, 2*$step_size);;
+        text-align: center;
+        background-color: $color3;
+    }
+}
+
+.copyright {
+    font-size: 0.8rem;
+    line-height: 3rem;
+    text-align: center;
+}

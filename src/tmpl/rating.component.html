@@ -1,0 +1,165 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-12">
+    <article>
+        <div *ngIf="oRating">
+            <h2>
+                <grader-edit [sName]="'sName'"
+							 [(oItem)]="oRating"
+							 [bRequired]="true"></grader-edit>
+            </h2>
+			
+			<p>
+                <grader-edit [sName]="'sNote'"
+							 [(oItem)]="oRating"></grader-edit>
+            </p>
+			
+            <dl>
+                <dt>{{w('course')}}</dt>
+                <dd>
+                    <a [routerLink]="['/app', 'course', oRating.nCouId ]">{{oRating.oCourse.getName()}}</a> 
+                    <span *ngIf="oRating.oCourse.sCategory != ''">({{oRating.oCourse.sCategory}})</span>
+                </dd>
+                <dt>{{w('catalogue')}}</dt>
+                <dd>
+                    <grader-edit [sName]="'nCatId'"
+                                 [(oItem)]="oRating"
+                                 [aLink]="['/app', 'catalogue', oRating.nCatId ]"></grader-edit>
+                </dd>
+                <dt>{{w('system')}}</dt>
+                <dd>
+                    <grader-edit [sName]="'nSysId'"
+                                 [(oItem)]="oRating"></grader-edit>
+                </dd>
+            </dl>
+            
+            <div *ngIf="oRating.getRatingsFromFinalTry().length > 0"
+                 class="row">
+                <grader-chart [sType]="'histogram'"
+                              [aData]="aHistogramData"
+                              [aLabel]="oRating.oSystem.aGrade"
+                              [aSeries]="[ w('grade') ]"
+                              *ngIf="aHistogramData.length > 0"
+                              class="col-md-8"></grader-chart>
+                <div class="col-md-4">
+                    <div *ngIf="oRating.numOfTries() > 1"
+                         class="alert alert-info">
+                        <p>{{s('ratingsummary', oRating.getName(), oRating.oCourse.getName(), oRating.numOfTries()-1)}}</p>
+                        <div id="tries" role="tablist" aria-multiselectable="true">
+                            <div *ngFor="let nTry of getTryCountArray()"
+                                 class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">
+                                        <a [class.collapsed]="nTry != 1"
+                                           data-toggle="collapse" data-parent="#tries" href="#tries-{{nTry}}-content">
+                                            {{s('xtry', nTry)}}
+                                        </a>
+                                    </h5>
+                                </div>
+                                <div [class.in]="nTry == 1"
+                                     id="tries-{{nTry}}-content" class="panel-collapse collapse" role="tabpanel">
+                                    <p>
+                                        {{s('ratingtryaverage', s('xtry', nTry), getPointsForTry(nTry).length, oRating.getRatings(0, nTry).length, mean(getPointsForTry(nTry)), sd(getPointsForTry(nTry)))}}
+                                    </p>
+                                    <ul>
+                                        <li>
+                                            <a [routerLink]="[ 'try', nTry, 'correct' ]">
+                                                {{s('ratingcorrecttryx', nTry)}}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a [routerLink]="[ 'try', nTry, 'calculate' ]">
+                                                {{s('ratingcalculatetryx', nTry)}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="oRating.numOfTries() <= 1"
+                         class="alert alert-info">
+                        <p>{{s('ratingaverage', w('rating'), aPoint.length, oRating.oCourse.aStudentInCourse.length, mean(aPoint), sd(aPoint))}}</p>
+                        <ul>
+                            <li><a [routerLink]="[ 'try', 1, 'correct' ]">{{w('ratingcorrect')}}</a></li>
+                            <li><a [routerLink]="[ 'try', 1, 'calculate' ]">{{w('ratingcalculate')}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div *ngIf="!oRating.getRatingsFromFinalTry().length"
+                 class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-info">
+                        {{s('ratingaverage', w('rating'), aPoint.length, oRating.oCourse.aStudentInCourse.length, mean(aPoint), sd(aPoint))}}
+                        <ul>
+                            <li><a [routerLink]="[ 'try', 1, 'correct' ]">{{w('ratingcorrect')}}</a></li>
+                            <li><a [routerLink]="[ 'try', 1, 'calculate' ]">{{w('ratingcalculate')}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="clearfix">
+				<grader-download-csv [aHead]="aCsvHead"
+									 [aData]="aCsvData"
+									 [sFilename]="oRating.getName()"
+									 [sClass]="'a btn btn-secondary btn-sm pull-md-right'"
+									 [sText]="s('xdownload', w('rating', oRating.oCourse.aStudentInCourse.length))"></grader-download-csv>
+            </p>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="2">{{w('sName')}}</th>
+                            <th *ngFor="let oCriteriaInCatalogue of oRating.oCatalogue.aCriteriaInCatalogue">
+                                {{oCriteriaInCatalogue.oCriteria.getName()}}
+                            </th>
+                            <th>{{w('fGrade')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let oStudentInCourse of getStudentsInCourse()"
+                            (click)="onClickStudentInCourse(oStudentInCourse)"
+                            class="a">
+                            <th>{{oStudentInCourse.oStudent.sName}}</th>
+                            <td *ngIf="oStudentInCourse.numOfTries(oRating.nId) <= 1"></td>
+                            <td *ngIf="oStudentInCourse.numOfTries(oRating.nId) > 1">
+                                <p *ngFor="let oRatingPerStudentInCourse of oStudentInCourse.getRatings(oRating.nId, 0)">
+                                    {{s('xtry', oRatingPerStudentInCourse.nTry)}}
+                                </p>
+                            </td>
+                            <td *ngFor="let oCriteriaInCatalogue of oRating.oCatalogue.aCriteriaInCatalogue">
+                                <p *ngFor="let sGrading of stringifyGradingPoints(oCriteriaInCatalogue, oStudentInCourse)">
+                                    <span *ngIf="sGrading == ''">
+                                        -
+                                    </span>
+                                    <span *ngIf="sGrading != ''">
+                                        {{sGrading}}
+                                    </span>
+                                </p>
+                            </td>
+                            <td>
+                                <p *ngFor="let sRating of stringifyRatingForStudentInCourse(oStudentInCourse)">
+                                    <span *ngIf="sRating == ''">
+                                        -
+                                    </span>
+                                    <span *ngIf="sRating != ''">
+                                        {{sRating}}
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        
+            <grader-delete [(oItem)]="oRating"></grader-delete>
+            
+            <grader-stu2cou [oStudentInCourse]="oStudentInCourseToShow"
+                            [bShow]="oStudentInCourseToShow !== null"
+                            [nS2RIdOpen]="nS2RIdForStudentInCourseToShow"
+                            (onHide)="onHideStudentInCourse($event)"></grader-stu2cou>
+        </div>
+    </article>
+</div>

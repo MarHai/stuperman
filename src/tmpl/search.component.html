@@ -1,0 +1,66 @@
+<form (ngSubmit)="onSearch()"
+      class="input-group input-group-sm">
+    <input [(ngModel)]="sQuery"
+           [ngModelOptions]="{standalone: true}"
+           (keyup)="onKey($event)"
+           type="search" class="form-control" placeholder="{{w('search')}}" />
+    <span class="input-group-btn">
+        <button type="submit" class="btn btn-default">
+            <i class="fa fa-search"></i>
+        </button>
+    </span>
+</form>
+<div *ngIf="sQuery != ''"
+     class="dropdown-menu">
+    <h6 *ngIf="aStudent.length + aCourse.length + aRating.length + aCatalogue.length + aCriteriaInCatalogue.length == 0"
+        class="dropdown-header">{{w('searchnoresults')}}</h6>
+    <h6 *ngIf="aStudent.length > 0"
+        class="dropdown-header">{{p('searchstudent', aStudent.length)}}</h6>
+    <a *ngFor="let oStudent of aStudent"
+       class="dropdown-item"
+       [class.active]="isActive('student', oStudent.nId)"
+       [routerLink]="['/app', 'student', oStudent.nId ]"
+	   (click)="onClickResult()">{{oStudent.getName()}}</a>
+    
+    <div *ngIf="aStudent.length > 0 && aCourse.length > 0"
+         class="dropdown-divider"></div>
+    <h6 *ngIf="aCourse.length > 0"
+        class="dropdown-header">{{p('searchcourse', aCourse.length)}}</h6>
+    <a *ngFor="let oCourse of aCourse"
+       class="dropdown-item"
+       [class.active]="isActive('course', oCourse.nId)"
+       [routerLink]="['/app', 'course', oCourse.nId ]"
+	   (click)="onClickResult()">{{oCourse.getName()}}</a>
+    
+    <div *ngIf="(aStudent.length > 0 || aCourse.length > 0) && aRating.length > 0"
+         class="dropdown-divider"></div>
+    <h6 *ngIf="aRating.length > 0"
+        class="dropdown-header">{{p('searchrating', aRating.length)}}</h6>
+    <a *ngFor="let oRating of aRating"
+       class="dropdown-item"
+       [class.active]="isActive('rating', oRating.nId)"
+       [routerLink]="['/app', 'course', oRating.oCourse.nId, 'rating', oRating.nId ]"
+	   (click)="onClickResult()">{{oRating.getName()}}</a>
+    
+    <div *ngIf="(aStudent.length > 0 || aCourse.length > 0 || aRating.length > 0) && aCatalogue.length > 0"
+         class="dropdown-divider"></div>
+    <h6 *ngIf="aCatalogue.length > 0"
+        class="dropdown-header">{{p('searchcatalogue', aCatalogue.length)}}</h6>
+    <a *ngFor="let oCatalogue of aCatalogue"
+       class="dropdown-item"
+       [class.active]="isActive('catalogue', oCatalogue.nId)"
+       [routerLink]="['/app', 'catalogue', oCatalogue.nId ]"
+	   (click)="onClickResult()">{{oCatalogue.getName()}}</a>
+    
+    <div *ngIf="(aStudent.length > 0 || aCourse.length > 0 || aRating.length > 0 || aCatalogue.length > 0) && aCriteriaInCatalogue.length > 0"
+         class="dropdown-divider"></div>
+    <h6 *ngIf="aCriteriaInCatalogue.length > 0"
+        class="dropdown-header">{{p('searchcriteria', aCriteriaInCatalogue.length)}}</h6>
+    <a *ngFor="let oCriteriaInCatalogue of aCriteriaInCatalogue"
+       class="dropdown-item"
+       [class.active]="isActive('cat2cri', oCriteriaInCatalogue.nId)"
+       [routerLink]="['/app', 'catalogue', oCriteriaInCatalogue.nCatId, 'criteria', oCriteriaInCatalogue.nId ]"
+	   (click)="onClickResult()">
+            {{oCriteriaInCatalogue.oCriteria.getName()}}
+    </a>
+</div>

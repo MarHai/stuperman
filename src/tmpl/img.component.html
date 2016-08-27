@@ -1,0 +1,82 @@
+<div *ngIf="bDirectInsert && !bUpdating"
+     class="row">
+    <div [class.col-md-3]="oItem.sImage"
+         class="p-t-1">
+        <img *ngIf="oItem.sImage"
+             src="{{oItem.sImage}}" class="img-fluid img-rounded" alt="{{oItem.getName()}}" />
+    </div>
+    <div [class.col-md-9]="oItem.sImage"
+         [class.col-md-12]="!oItem.sImage">
+        <div (paste)="onPaste($event)"
+             (drop)="onDropFile($event)"
+             (dragover)="onDragOver($event)"
+             (dragleave)="onDragLeave($event)">
+            <div [class.dragover]="bDragOver"
+                 class="imgfind">
+                <p [innerHtml]="w('imginstruction') | markdown"></p>
+                <label class="file">
+                    <input (change)="onFileChange($event)"
+                           type="file" accept="image/*" />
+                    <span class="file-custom"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<p *ngIf="bDirectInsert && !bUpdating">
+    <a (click)="onClickDelete()"
+       class="btn btn-danger">{{s('delete', w('sImage'))}}</a>
+</p>
+<div *ngIf="!bDirectInsert"
+     class="modal text-sm-left" role="dialog" data-keyboard="true" id="img-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    {{oItem.getName()}} &middot; {{s('edit', w('sImage'))}}
+                </h4>
+            </div>
+            <div (paste)="onPaste($event)"
+                 (drop)="onDropFile($event)"
+                 (dragover)="onDragOver($event)"
+                 (dragleave)="onDragLeave($event)"
+                 class="modal-body" tabindex="-1">
+                <div [class.dragover]="bDragOver"
+                     class="imgfind">
+                    <p [innerHtml]="w('imginstruction') | markdown"></p>
+                    <label class="file">
+                        <input (change)="onFileChange($event)"
+                               type="file" accept="image/*" />
+                        <span class="file-custom"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a (click)="onClickDelete()"
+                   class="btn btn-danger">{{s('delete', w('sImage'))}}</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="bUpdating"
+     class="clearfix {{sCssClass}}">
+    <i class="fa fa-circle-o-notch fa-spin"></i>
+</div>
+<a *ngIf="bEdit && !bUpdating && !bDirectInsert"
+   (click)="onClickEdit()"
+   class="a clearfix {{sCssClass}}">
+    <i *ngIf="!oItem.sImage"
+       class="fa fa-user-secret"
+       title="{{oItem.getName()}}"></i>
+    <img *ngIf="oItem.sImage"
+         src="{{oItem.sImage}}" class="img-fluid img-rounded" alt="{{oItem.getName()}}" />
+</a>
+<div *ngIf="!bEdit && !bUpdating && !bDirectInsert"
+     class="clearfix {{sCssClass}}">
+    <i *ngIf="!oItem.sImage"
+       class="fa fa-user-secret"
+       title="{{oItem.getName()}}"></i>
+    <img *ngIf="oItem.sImage"
+         src="{{oItem.sImage}}" class="img-fluid img-rounded" alt="{{oItem.getName()}}" />
+</div>

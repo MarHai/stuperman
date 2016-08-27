@@ -1,0 +1,164 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-9">
+    <article>
+        <div *ngIf="oStudent">
+            <div class="row">
+                <h2 class="col-sm-9">
+                    <grader-edit [sName]="'sName'"
+                                 [(oItem)]="oStudent"
+                                 [bRequired]="true"></grader-edit>
+                </h2>
+                <div class="col-sm-3 text-xs-right">
+                    <grader-img [(oItem)]="oStudent"
+                                [bEdit]="true"
+                                [sCssClass]="'center-block'"></grader-img>
+                </div>
+            </div>
+            
+            <email-add *ngIf="oStudent.sMail"
+                       [sTo]="'student:' + oStudent.nId.toString()"></email-add>
+            
+            <dl>
+                <dt>{{w('sNr')}}</dt>
+                <dd>
+                    <grader-edit [sName]="'sNr'"
+							     [(oItem)]="oStudent"></grader-edit>
+                </dd>
+                <dt>{{w('sMail')}}</dt>
+                <dd>
+                    <grader-edit [sName]="'sMail'"
+                                 [(oItem)]="oStudent"></grader-edit>
+                </dd>
+                <dt>{{w('sNote')}}</dt>
+                <dd>
+                    <grader-edit [sName]="'sNote'"
+                                 [(oItem)]="oStudent"></grader-edit>
+                </dd>
+            </dl>
+
+            
+            <h3>{{w('course', getStudentInCourses().length)}}</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>{{w('sName')}}</th>
+                            <th>{{w('sCategory')}}</th>
+                            <th>{{w('fGrade')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let oStudentInCourse of getStudentInCourses()"
+                            (click)="onClickStudentInCourse(oStudentInCourse)"
+                            class="a">
+                            <th>{{oStudentInCourse.oCourse.getName()}}</th>
+                            <td>{{oStudentInCourse.oCourse.sCategory}}</td>
+                            <td>{{oStudentInCourse.fGrade}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            
+            <h3>{{w('talk', oStudent.aTalk.length)}}</h3>
+            <div *ngIf="oStudent.aTalk.length > 0"
+                 id="talk" role="tablist" aria-multiselectable="true">
+				<div *ngFor="let oTalk of oStudent.aTalk; let i = index"
+					 class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a aria-expanded="false" href="#talk-{{oTalk.nId}}-content" data-toggle="collapse" data-parent="#talk" class="collapsed">
+								{{oTalk.getName()}}
+							</a>
+						</h4>
+					</div>
+					<div id="talk-{{oTalk.nId}}-content" class="panel-collapse collapse" role="tabpanel">
+                        <blockquote class="blockquote">
+                            <grader-edit [sName]="'sNote'"
+                                         [(oItem)]="oStudent.aTalk[i]"
+                                         [bPre]="true"></grader-edit>
+                        </blockquote>
+                        <grader-delete [(oItem)]="oStudent.aTalk[i]"></grader-delete>
+                    </div>
+                </div>
+            </div>
+            <grader-add [oItem]="getEmptyTalk()"
+                        [sValue]="s('add', w('talk'))"
+                        [aHidden]="[ 'nStuId' ]"></grader-add>
+            
+            
+            <h3>{{w('email', oStudent.aMail.length)}}</h3>
+            <div *ngIf="oStudent.aMail.length > 0"
+                 id="mail" role="tablist" aria-multiselectable="true">
+				<div *ngFor="let oMail of oStudent.aMail"
+					 class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a aria-expanded="false" href="#mail-{{oMail.nId}}-content" data-toggle="collapse" data-parent="#mail" class="collapsed">
+								{{oMail.getName()}}
+							</a>
+						</h4>
+					</div>
+					<div id="mail-{{oMail.nId}}-content" class="panel-collapse collapse" role="tabpanel">
+                        <blockquote class="blockquote">
+                            <pre>{{oMail.sMail}}</pre>
+                            <div class="blockquote-footer">
+                                {{oMail.sRecipient}}, 
+                                <cite title="{{w('dCreate')}}: {{oMail.dCreate.toLocaleDateString()}}, {{oMail.dCreate.toLocaleTimeString()}}">
+                                    {{oMail.dCreate | datetimeStringify }}
+                                </cite>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+            <email-add [sTo]="'student:' + oStudent.nId.toString()"
+                       [sLinkClass]="'btn btn-success pull-md-right'"></email-add>
+            
+            <div class="clearfix"></div>
+            <grader-delete [(oItem)]="oStudent"></grader-delete>
+            
+            <grader-stu2cou [oStudentInCourse]="oStudentInCourseToShow"
+                            [bShow]="oStudentInCourseToShow !== null"
+                            (onHide)="onHideStudentInCourse($event)"></grader-stu2cou>
+        </div>
+    </article>
+</div>
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-3">
+    <aside>
+        <h6>{{w('quicklink')}}</h6>
+        <grader-quicklink [aLink]="getCategories()"
+                          (onSelect)="onQuicklinkChange($event)"></grader-quicklink>
+    </aside>
+    <aside>
+        <h6>{{w('timer')}}</h6>
+        <p class="input-group">
+            <input [ngModel]="sTimer"
+                   (ngModelChange)="onTimerChange($event)"
+                   type="time" placeholder="hh:mm" class="form-control" title="{{w('timerset')}}" />
+            <span class="input-group-btn">
+                <a *ngIf="!bTimerStarted"
+                   (click)="onTimerStart()"
+                   title="{{w('timerset')}}" class="a btn btn-secondary">{{w('timergo')}}</a>
+                <a *ngIf="bTimerStarted"
+                   (click)="onTimerAbort()"
+                   class="a btn btn-secondary">{{w('timerabort')}}</a>
+            </span>
+        </p>
+        <p *ngIf="bTimerEnded">
+            <i class="fa fa-check"></i> 
+            <strong>{{w('timerdone')}}</strong>
+        </p>
+        <div *ngIf="bTimerStarted">
+            <progress class="progress" 
+                      value="{{convertTimeStringIntoSeconds() - nElapsed}}" 
+                      max="{{convertTimeStringIntoSeconds()}}">
+                {{100*(convertTimeStringIntoSeconds()-nElapsed)/convertTimeStringIntoSeconds()}} %
+            </progress>
+            <p class="text-xs-center">
+                {{s('timerxleft', convertTimeStringIntoSeconds()-nElapsed | convertSecondsToDate | date:'mm:ss')}}
+            </p>
+        </div>
+    </aside>
+</div>

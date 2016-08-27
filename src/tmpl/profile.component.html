@@ -1,0 +1,213 @@
+<div *ngIf="oDataService.isLoggedIn()"
+     class="col-md-12">
+    <article>
+        <h2 *ngIf="oUser">{{oUser.sUser}}</h2>
+        <div *ngIf="oUser"
+             class="row">
+            <div class="col-md-5">
+                <dl>
+                    <dt>{{w('sName')}}</dt>
+                    <dd>
+                        <grader-edit [sName]="'sName'"
+                                     [(oItem)]="oUser"
+                                     [bRequired]="true"></grader-edit>
+                    </dd>
+                    <dt>{{w('sMail')}}</dt>
+                    <dd>
+                        <grader-edit [sName]="'sMail'"
+                                     [(oItem)]="oUser"
+                                     [bRequired]="true"></grader-edit>
+                    </dd>
+                    <dt>{{w('bOfflineSync')}}</dt>
+                    <dd>
+                        <grader-edit [sName]="'bOfflineSync'"
+                                     [(oItem)]="oUser"
+                                     (onUpdate)="onChangeOfflineSync()"></grader-edit>
+                    </dd>
+                    <dt>{{w('sPasswordChange')}}</dt>
+                    <dd>
+                        <p *ngIf="bVolatile">{{w('wait')}}</p>
+                        <form (ngSubmit)="onPasswordChange()"
+                              *ngIf="!bVolatile">
+                            <input [(ngModel)]="sPasswordNew1"
+                                   [ngModelOptions]="{standalone: true}"
+                                   class="form-control"
+                                   type="password"
+                                   placeholder="{{w('sPassword')}}" />
+                            <input [(ngModel)]="sPasswordNew2"
+                                   [ngModelOptions]="{standalone: true}"
+                                   class="form-control"
+                                   type="password"
+                                   placeholder="{{w('sPasswordRepeat')}}" />
+                            <p *ngIf="sPasswordError != ''"
+                               class="alert alert-danger">{{sPasswordError}}</p>
+                            <input type="submit" class="btn btn-primary" value="{{w('save')}}" />
+                        </form>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6 offset-md-1">
+                <dl>
+                    <dt>{{w('dCreate')}}</dt>
+                    <dd>{{oUser.dCreate | datetimeStringify }}</dd>
+                    
+                    <dt>{{w('eLanguage')}}</dt>
+                    <dd>{{w(oUser.eLanguage)}}</dd>
+                    
+                    <dt>{{w('eDialect')}}</dt>
+                    <dd>{{w(oUser.eDialect)}}</dd>
+                    
+                    <dt>{{w('course', 2)}}</dt>
+                    <dd>{{oUser.aCourse.length}}</dd>
+                    
+                    <dt>{{w('student', 2)}}</dt>
+                    <dd>{{oUser.aStudent.length}}</dd>
+                    
+                    <dt>{{w('catalogue', 2)}}</dt>
+                    <dd>{{oUser.aCatalogue.length}}</dd>
+                    
+                    <dt>{{w('talk', 2)}}</dt>
+                    <dd>{{oUser.aTalk.length}}</dd>
+                    
+                    <dt>{{w('email', 2)}}</dt>
+                    <dd>{{oUser.aMail.length}}</dd>
+                </dl>
+            </div>
+        </div>
+        <div *ngIf="oUser && oUser.bAdmin">
+            <h2>{{w('system', aSystem.length)}}</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>{{w('sGroup')}}</th>
+                            <th>{{w('sName')}}</th>
+                            <th>{{w('sGrade', 2)}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let oSystem of aSystem; let i = index">
+                            <td>
+                                <grader-edit [sName]="'sGroup'"
+                                             [(oItem)]="aSystem[i]"></grader-edit>
+                            </td>
+                            <th>
+                                <grader-edit [sName]="'sName'"
+                                             [(oItem)]="aSystem[i]"
+                                             [bRequired]="true"></grader-edit>
+                            </th>
+                            <td>
+                                <span *ngFor="let nGrade of oSystem.aGrade; let j = index">
+                                    <code [class.text-primary]="oSystem.aGradeFail.indexOf(nGrade) < 0"
+                                          [class.text-danger]="oSystem.aGradeFail.indexOf(nGrade) >= 0">{{nGrade}}</code><span *ngIf="(j+1) < oSystem.aGrade.length">, </span>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="clearfix">
+                <grader-add [oItem]="getEmptySystem()"
+                            [sValue]="s('add', w('system'))"></grader-add>
+            </p>
+            
+            <h2>{{w('user', aUser.length)}}</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>{{w('sUser')}}</th>
+                            <th>{{w('sName')}}</th>
+                            <th>{{w('sMail')}}</th>
+                            <th>{{w('eLanguage')}}</th>
+                            <th>{{w('eDialect')}}</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let oUserListed of aUser; let i = index"
+                            [class.table-info]="oUserListedEmails?.nId == oUserListed.nId">
+                            <th (click)="onClickUser(aUser[i])"
+                                class="a">{{oUserListed.sUser}}</th>
+                            <td>
+                                <grader-edit [sName]="'sName'"
+                                             [(oItem)]="aUser[i]"
+                                             [bRequired]="true"></grader-edit>
+                            </td>
+                            <td>
+                                <grader-edit [sName]="'sMail'"
+                                             [(oItem)]="aUser[i]"
+                                             [bRequired]="true"></grader-edit>
+                            </td>
+                            <td>
+                                <grader-edit [sName]="'eLanguage'"
+                                             [aOption]="getLanguageOptions()"
+                                             [(oItem)]="aUser[i]"
+                                             [bRequired]="true"></grader-edit>
+                            </td>
+                            <td>
+                                <grader-edit [sName]="'eDialect'"
+                                             [aOption]="getDialectOptions()"
+                                             [(oItem)]="aUser[i]"
+                                             [bRequired]="true"></grader-edit>
+                            </td>
+                            <td>
+                                <email-add *ngIf="oUserListed.sMail"
+                                           [sTo]="'user:' + aUser[i].nId.toString()"
+                                           [bIconOnly]="true"
+                                           [sLinkClass]="'btn btn-secondary btn-sm'"></email-add>
+                                <a (click)="onClickRegeneratePassword(aUser[i])"
+                                   *ngIf="!bPasswordRegenerationInProgress"
+                                   class="a btn btn-secondary btn-sm"
+                                   title="{{w('profilepwregeneration')}}"><i class="fa fa-key"></i></a>
+                                <grader-delete [(oItem)]="aUser[i]"
+                                               [bIconOnly]="true"
+                                               [sLinkClass]="'btn btn-danger btn-sm'"></grader-delete>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="clearfix">
+                <grader-add [oItem]="getEmptyUser()"
+                            [aHidden]="[ 'bOfflineSync', 'eLanguage', 'eDialect' ]"
+                            [sValue]="s('add', w('user'))"></grader-add>
+            </p>
+            
+            <div *ngIf="oUserListedEmails">
+                <div *ngIf="getMails(oUserListedEmails).length > 0"
+                     id="mail" role="tablist" aria-multiselectable="true">
+                    <div *ngFor="let oMail of getMails(oUserListedEmails)"
+                         class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a aria-expanded="false" href="#mail-{{oMail.nId}}-content" data-toggle="collapse" data-parent="#mail" class="collapsed">
+                                    {{oMail.getName()}}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="mail-{{oMail.nId}}-content" class="panel-collapse collapse" role="tabpanel">
+                            <blockquote class="blockquote">
+                                <pre>{{oMail.sMail}}</pre>
+                                <div class="blockquote-footer">
+                                    {{oMail.sRecipient}}, 
+                                    <cite title="{{w('dCreate')}}: {{oMail.dCreate.toLocaleDateString()}}, {{oMail.dCreate.toLocaleTimeString()}}">
+                                        {{oMail.dCreate | datetimeStringify }}
+                                    </cite>
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <p *ngIf="getMails(oUserListedEmails).length == 0"
+                   class="text-muted">
+                    {{s('profilenomails', oUserListedEmails.getName())}}
+                </p>
+                <p class="clearfix">
+                    <email-add [sTo]="'user:' + oUserListedEmails.nId.toString()"
+                               [sLinkClass]="'btn btn-success pull-md-right'"></email-add>
+                </p>
+            </div>
+        </div>
+    </article>
+</div>

@@ -102,7 +102,7 @@ a, .a {
 
 
     @media screen and (max-width: $screen-sm-max) {
-        .navbar-collapse {
+        .navbar-collapse:not(.in) {
             display: none;
         }
     }

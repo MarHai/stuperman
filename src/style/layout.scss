@@ -30,6 +30,10 @@ body {
 				background-color: rgba(255, 255, 255, .5);
 				border-top-left-radius: .3rem;
 				border-top-right-radius: .3rem;
+                max-width: 25%;
+                overflow-x: hidden;
+                text-overflow: ellipsis;
+                vertical-align: top;
 
 				&:not(.active):hover {
 					background-color: rgba(255, 255, 255, .75);
@@ -43,8 +47,10 @@ body {
 		
 		aside {
 			grader-search {
-				width: 60%;
-				float: left;
+                @media screen and (min-width: $screen-sm-min) {
+                    width: 60%;
+                    float: left;
+                }
 
 				& > .dropdown-menu {
 					display: block;

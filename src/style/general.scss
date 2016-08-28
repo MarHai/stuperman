@@ -1,5 +1,9 @@
 a, .a {
     cursor: pointer;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
 }
 
 .move {

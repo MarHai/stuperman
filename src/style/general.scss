@@ -1,9 +1,18 @@
 a, .a {
     cursor: pointer;
+}
+
+a.btn, .a.btn {
     max-width: 100%;
     overflow-x: hidden;
     text-overflow: ellipsis;
     vertical-align: top;
+}
+
+.input-group-btn a.btn, .input-group-btn .a.btn {
+    overflow-x: initial;
+    text-overflow: initial;
+    vertical-align: initial;
 }
 
 .move {

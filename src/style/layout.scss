@@ -11,7 +11,7 @@ html {
 }
 
 body {
-	background-color: $colorbg;
+	background-color: $colorbg !important;
 	font-family: $font;
 	
 	@import "general";
@@ -84,7 +84,7 @@ body {
 			min-height: 25rem;
             
             .btn-success, .btn-danger {
-                color: white;
+                color: white !important;
             }
 			
 			@import "content";
@@ -173,8 +173,8 @@ body {
 		}
 
 		a:hover, .a:hover, a:focus, .a:focus {
-			color: darken($colorbg, 2*$step_size);
-			text-decoration: none;
+			color: darken($colorbg, 2*$step_size) !important;
+			text-decoration: none !important;
 		}
 	}
 }
